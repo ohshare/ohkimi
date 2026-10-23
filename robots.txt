@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ohshare.github.io/ohkimi/sitemap.xml
