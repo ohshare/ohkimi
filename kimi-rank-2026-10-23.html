@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<script id="kfr-share-flag">window.__KFR_SHARE__ = true;</script>
+<title>Kimi 社区 · 博主粉丝排行榜</title>
+<style>
+  :root{
+    --bg:#08090d; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.07);
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.14);
+    --txt:#f2f4fa; --sub:#a3a9bd; --mut:#6b7186;
+    --a1:#7c6cff; --a2:#22d3ee; --gold:#ffd166; --silver:#cfd8ea; --bronze:#e59a5b;
+    --ok:#34d399;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);min-height:100vh;
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;overflow-x:hidden}
+  .orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none;z-index:0}
+  .orb.a{width:420px;height:420px;background:#4b3cff;top:-160px;left:-120px}
+  .orb.b{width:380px;height:380px;background:#0ea5b7;top:120px;right:-160px;opacity:.35}
+  .orb.c{width:320px;height:320px;background:#7c2d92;bottom:-140px;left:30%;opacity:.25}
+  .app{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:26px 16px 48px}
+  .hero{text-align:center;padding:16px 0 8px}
+  .eyebrow{font-size:10.5px;letter-spacing:3px;color:var(--mut);font-weight:700}
+  .hero h1{margin:10px 0 8px;font-size:30px;line-height:1.15;font-weight:900;letter-spacing:.5px;
+    background:linear-gradient(100deg,#fff 0%,#b9b2ff 38%,#5ee7ff 72%,#fff 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{margin:0;color:var(--sub);font-size:12.5px}
+  .live{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 11px;border-radius:99px;
+    background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.28);color:#7ff0c4;font-size:11.5px;font-weight:600}
+  .live i{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+  .ticker{margin-top:16px;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--line);overflow:hidden}
+  .ticker .lb{flex:0 0 auto;font-size:10.5px;font-weight:800;color:#0b0d12;background:linear-gradient(135deg,var(--gold),#ffb347);border-radius:6px;padding:2px 7px}
+  .ticker .track{flex:1;overflow:hidden;white-space:nowrap}
+  .ticker .track span{display:inline-block;padding-left:100%;color:var(--sub);font-size:12px;animation:marq 24s linear infinite}
+  @keyframes marq{to{transform:translateX(-100%)}}
+  .overview{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:16px 0}
+  .ov{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+    border-radius:14px;padding:12px 8px;text-align:center}
+  .ov b{display:block;font-size:19px;font-weight:900;letter-spacing:.3px}
+  .ov span{display:block;color:var(--mut);font-size:10.5px;margin-top:3px}
+  .ov.top b{background:linear-gradient(92deg,var(--gold),#ff9f43);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .podium{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:9px;align-items:end;margin:6px 0 18px}
+  .pod{position:relative;border-radius:18px;padding:18px 10px 14px;text-align:center;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);overflow:hidden;cursor:pointer}
+  .pod.first{padding-top:26px;border-color:rgba(255,209,102,.45);
+    background:linear-gradient(180deg,rgba(255,209,102,.16),rgba(255,255,255,.02))}
+  .pod .medal{font-size:20px;line-height:1}
+  .pod .pav{width:54px;height:54px;margin:8px auto;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:20px;color:#fff;overflow:hidden}
+  .pod.first .pav{width:64px;height:64px;font-size:23px;outline:2px solid rgba(255,209,102,.7);outline-offset:3px}
+  .pod .pav img{width:100%;height:100%;object-fit:cover}
+  .pod .pn{font-weight:800;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pod .pf{font-size:19px;font-weight:900;margin-top:4px;
+    background:linear-gradient(92deg,#a99fff,#5ee7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .pod .pl{font-size:10px;color:var(--mut)}
+  .tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none;position:sticky;top:0;z-index:6;
+    background:linear-gradient(180deg,rgba(8,9,13,.96),rgba(8,9,13,.75) 75%,transparent)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:0 0 auto;padding:9px 15px;border-radius:99px;border:1px solid var(--line);
+    background:var(--panel);color:var(--sub);font-size:13px;font-weight:700}
+  .tabs button.active{color:#0b0d12;background:linear-gradient(135deg,#c9c2ff,#7ce9ff);border-color:transparent}
+  .toolbar{display:flex;gap:8px;margin-bottom:12px}
+  .toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);color:var(--txt);
+    border-radius:12px;padding:11px 12px;font-size:13.5px;outline:none}
+  .toolbar input{flex:1;min-width:0}
+  .toolbar input:focus,.toolbar select:focus{border-color:rgba(124,108,255,.6)}
+  .toolbar button{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--sub);border-radius:12px;padding:0 12px;font-size:13px;font-weight:700}
+  .imp{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(4,5,9,.8);padding:16px}
+  .imp.on{display:flex}
+  .imp .box{width:100%;max-width:560px;background:#14161f;border:1px solid var(--line2);border-radius:18px;padding:16px}
+  .imp h3{margin:0 0 8px;font-size:16px}
+  .imp p{color:var(--mut);font-size:12px;margin:0 0 10px;line-height:1.6}
+  .imp textarea{width:100%;height:210px;background:#0c0e14;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;font:12px/1.5 ui-monospace,monospace;resize:vertical}
+  .imp .row{display:flex;gap:8px;margin-top:10px}
+  .imp .row button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--txt);font-weight:700;font-size:13px}
+  .imp .row button.pri{background:linear-gradient(135deg,var(--a1),var(--a2));border:none;color:#08121a}
+  .imp .msg{font-size:12px;margin-top:8px;color:var(--sub);min-height:16px}
+  .syncbar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:7px;font-size:11px;color:var(--mut);flex-wrap:wrap}
+  .syncbar .dot{width:5px;height:5px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .syncbar .dot.off{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
+  .syncbar button{background:var(--panel);border:1px solid var(--line);color:var(--sub);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600}
+  ol.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  li.row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;cursor:pointer;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);position:relative;overflow:hidden}
+  li.row.top{border-color:rgba(255,209,102,.28)}
+  .rk{flex:0 0 32px;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:13.5px;background:rgba(255,255,255,.07);color:var(--sub)}
+  .rk.g{background:linear-gradient(180deg,#ffdd7a,#eda12a);color:#3a2a00}
+  .rk.s{background:linear-gradient(180deg,#eef3fb,#b9c4d6);color:#2a2f3d}
+  .rk.b{background:linear-gradient(180deg,#f0aa6d,#cf7434);color:#301400}
+  .av{flex:0 0 46px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:900;color:#fff;font-size:17px;overflow:hidden}
+  .av img{width:100%;height:100%;object-fit:cover}
+  .inf{flex:1;min-width:0}
+  .nm{display:flex;align-items:center;gap:6px;font-weight:800;font-size:15px}
+  .nm .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bd{flex:0 0 auto;font-size:9px;font-weight:900;letter-spacing:.5px;color:#0b0d12;border-radius:5px;padding:1px 5px;background:var(--gold)}
+  .bd.s{background:var(--silver)} .bd.b{background:var(--bronze)}
+  .bio{margin-top:2px;color:var(--mut);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ns{display:flex;gap:16px;margin-top:7px;align-items:flex-end}
+  .ns .k b{display:block;font-size:14.5px;font-weight:900}
+  .ns .k span{display:block;color:var(--mut);font-size:10px;margin-top:1px}
+  .ns .k.p b{background:linear-gradient(92deg,#a99fff,#5ee7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ln{position:absolute;left:0;bottom:0;height:2.5px;background:linear-gradient(90deg,var(--a1),var(--a2));opacity:.85}
+  .chev{flex:0 0 auto;color:var(--mut);font-size:16px}
+  .empty{text-align:center;color:var(--mut);padding:54px 0 40px}
+  .empty .big{font-size:34px;margin-bottom:8px;opacity:.5}
+  .about{display:none}
+  .about h2{font-size:16px;margin:18px 0 8px}
+  .about p,.about li{color:var(--sub);font-size:13px;line-height:1.75}
+  .about ul{padding-left:18px;margin:6px 0}
+  .about .note{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:12.5px;color:var(--mut)}
+  .modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;
+    background:rgba(4,5,9,.72);backdrop-filter:blur(6px)}
+  .modal.on{display:flex}
+  .sheet{width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;
+    background:linear-gradient(180deg,#14161f,#0c0e14);border:1px solid var(--line2);border-bottom:none;
+    padding:10px 18px 30px}
+  .grab{width:42px;height:4px;border-radius:99px;background:#34394c;margin:6px auto 14px}
+  .sheet .head{display:flex;gap:14px;align-items:center}
+  .sheet .head .av{width:60px;height:60px;flex-basis:60px;font-size:22px}
+  .sheet .head .nm{font-size:19px}
+  .sheet .head .bio{white-space:normal;font-size:12px;margin-top:4px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 6px}
+  .g4{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+  .g4 b{display:block;font-size:16px;font-weight:900}
+  .g4 span{display:block;color:var(--mut);font-size:10px;margin-top:2px}
+  .radar-wrap{display:flex;justify-content:center;margin:8px 0 0}
+  .radar{width:250px;height:220px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;margin-top:2px}
+  .legend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));margin-right:5px}
+  .legend span{font-size:10.5px;color:var(--mut)}
+  .sheet .acts{display:flex;gap:8px;margin-top:16px}
+  .sheet .acts button{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);color:var(--txt);font-weight:700;font-size:13px}
+  .sheet .acts button.pri{background:linear-gradient(135deg,var(--a1),var(--a2));border:none;color:#08121a}
+  footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);text-align:center;color:var(--mut);font-size:11.5px;line-height:1.7}
+  footer b{color:var(--sub)}
+  @media(max-width:560px){
+    .hero h1{font-size:24px}
+    .overview{grid-template-columns:repeat(2,1fr)}
+    .podium{grid-template-columns:1fr 1.15fr 1fr;gap:6px}
+    .pod{padding:14px 6px 12px}
+    .pod .pav{width:46px;height:46px;font-size:17px}
+    .pod.first .pav{width:56px;height:56px;font-size:20px}
+    .pod .pn{font-size:12px}
+    .pod .pf{font-size:16px}
+    .grid4{grid-template-columns:repeat(2,1fr)}
+    .ns{gap:12px}
+    .app{padding:20px 12px 40px}
+  }
+</style>
+</head>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+
+<div class="app">
+  <header class="hero">
+    <div class="eyebrow">KIMI COMMUNITY · FANS RANKING</div>
+    <h1>博主粉丝排行榜</h1>
+    <p class="sub">Kimi 社区公开数据 · 按粉丝数综合排序</p>
+    <div class="live"><i></i><span id="live-text"></span></div>
+    
+    <div class="ticker">
+      <span class="lb">公告</span>
+      <div class="track"><span id="ticker-text"></span></div>
+    </div>
+  </header>
+
+  <section class="overview">
+    <div class="ov"><b id="ov-n"></b><span>收录博主</span></div>
+    <div class="ov"><b id="ov-f"></b><span>粉丝总量</span></div>
+    <div class="ov"><b id="ov-avg"></b><span>人均粉丝</span></div>
+    <div class="ov top"><b id="ov-top"></b><span>榜首</span></div>
+  </section>
+
+  <section class="podium" id="podium" style="display: grid;"></section>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="all" class="active">总榜</button>
+    <button data-tab="mutual">互关榜</button>
+    <button data-tab="potential">潜力榜</button>
+    <button data-tab="rising">新锐榜</button>
+    <button data-tab="about">数据说明</button>
+    <button data-tab="terms">用户协议</button>
+  </nav>
+
+  <div class="toolbar" id="toolbar">
+    <input id="q" type="search" placeholder="搜索博主 / 简介…" autocomplete="off">
+    <select id="sort">
+      <option value="default">默认排序</option>
+      <option value="followers">按粉丝数</option>
+      <option value="following">按关注数</option>
+      <option value="stickiness">按粉丝黏性</option>
+      <option value="name">按昵称</option>
+    </select>
+    
+  </div>
+
+  <main>
+    <ol class="list" id="list"></ol>
+    <div class="empty" id="empty" style="display:none"><div class="big">🔍</div>没有匹配的博主</div>
+
+    <section class="about" id="about">
+      <h2>这份榜单是什么</h2>
+      <p>它按 <b>粉丝数</b> 收录并排序 Kimi 社区（App 内「发现」）的博主，数据来自社区公开动态与用户资料，更新于 <b id="about-time"></b>（北京时间）。</p>
+      <p><b>手动更新：</b>在脚本里点「导出 JSON」，回到本页点右上角「导入」，粘贴后点「应用」。数据会保存在你手机浏览器里，下次打开仍是新的。</p>
+      <h2>指标怎么算</h2>
+      <ul>
+        <li><b>粉丝 / 关注</b>：社区个人主页公开的统计值。</li>
+        <li><b>粉丝黏性</b>：粉丝 ÷（粉丝 + 关注）。值越高，说明涨粉相对更“净”。</li>
+        <li><b>榜单分位</b>：该博主在总榜中的相对位置（越靠前越高）。</li>
+        <li><b>数据画像</b>：以上指标归一化后的雷达图，仅作相对参考，不是官方评分。</li>
+      </ul>
+      <h2>榜单怎么分</h2>
+      <ul>
+        <li><b>总榜</b>：全部博主，按粉丝数。</li>
+        <li><b>互关榜</b>：按关注数，社区里“必互关”型博主靠前。</li>
+        <li><b>潜力榜</b>：粉丝 ≥ 20，按粉丝黏性。</li>
+        <li><b>新锐榜</b>：粉丝 50–500 的成长型账号，按粉丝数。</li>
+      </ul>
+      <h2>边界与免责</h2>
+      <div class="note">
+        本页为个人整理，非 Kimi / 月之暗面官方榜单。收录范围来自社区搜索可见的动态作者，<b>不保证覆盖全部账号</b>；粉丝数为抓取时点快照，会随时间变化。请勿用于商业用途或对他人进行不当评价。
+      </div>
+    </section>
+
+    <section class="about" id="terms">
+      <h2>用户协议</h2>
+      <p>最后更新：2026-10-18。使用本页面即表示你同意以下条款。</p>
+      <h2>1. 服务性质</h2>
+      <p>本榜单为非官方、个人整理的免费工具，与 Kimi / 月之暗面（Moonshot AI）无隶属或合作关系。</p>
+      <h2>2. 数据来源</h2>
+      <p>数据来自 Kimi 社区公开可见的动态与用户资料，仅用于展示与统计；不采集私密内容。</p>
+      <h2>3. 使用限制</h2>
+      <ul>
+        <li>不得将本页面或数据用于商业转售、批量分发；</li>
+        <li>不得用于骚扰、歧视、人肉或对他人进行不当评价；</li>
+        <li>不得用于高频请求、绕过风控或攻击平台。</li>
+      </ul>
+      <h2>4. 隐私</h2>
+      <p>本页面为静态页面，不收集访问者信息；抓取脚本的登录令牌仅保存在使用者本人设备本地，不上传。</p>
+      <h2>5. 免责</h2>
+      <p>数据可能不完整、滞后或存在误差，按“现状”提供，不构成任何担保；因使用产生的后果由使用者自行承担。</p>
+      <h2>6. 变更</h2>
+      <p>协议与功能可能随时调整，更新后继续使用即视为接受。</p>
+      <div class="note">如不同意以上条款，请停止使用并删除本页面。</div>
+    </section>
+  </main>
+
+  <footer>
+    <div>数据来源：<b id="foot-src"></b> · 更新于 <b id="foot-time"></b>（北京时间）</div>
+    <div>共收录 <b id="foot-n"></b> 位博主 · 非官方榜单，仅供参考</div>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet" id="sheet">
+    <div class="grab"></div>
+    <div id="sheet-body"></div>
+  </div>
+</div>
+
+<div class="imp" id="import-modal">
+  <div class="box">
+    <h3>导入榜单数据</h3>
+    <p>把脚本里「导出 JSON」复制的内容粘贴到下面，点「应用」即可。数据只存在你本机浏览器，不会上传。</p>
+    <textarea id="import-text" placeholder="粘贴形如 {&quot;bloggers&quot;:[{&quot;name&quot;:&quot;Kimi&quot;,&quot;followers&quot;:11059}]} 的 JSON"></textarea>
+    <div class="msg" id="import-msg"></div>
+    <div class="row">
+      <button id="import-clear" type="button">清除本地数据</button>
+      <button id="import-cancel" type="button">取消</button>
+      <button class="pri" id="import-apply" type="button">应用</button>
+    </div>
+  </div>
+</div>
+
+<div class="imp" id="token-modal">
+  <div class="box">
+    <h3>接入实时数据（只需一次）</h3>
+    <p>1. 用 Via 打开 <b>www.kimi.com</b> 并登录<br>
+       2. 运行「取 Token」脚本，它会自动复制 refresh_token<br>
+       3. 回到本页粘贴，点「接入并同步」<br>
+       之后每次打开本页都会自动抓最新数据，不用再管。</p>
+    <textarea id="token-text" placeholder="粘贴 refresh_token" style="height:110px"></textarea>
+    <div class="msg" id="token-msg"></div>
+    <div class="row">
+      <button id="token-cancel" type="button">稍后</button>
+      <button class="pri" id="token-connect" type="button">接入并同步</button>
+    </div>
+  </div>
+</div>
+
+<div class="imp" id="cloud-modal">
+  <div class="box">
+    <h3>云端同步（可选）</h3>
+    <p>配置后，每次抓完会自动把 data.json 推到 GitHub，部署在 GitHub Pages 上的榜单随之更新，别人只需打开网址。<br>
+       令牌只存在你本机浏览器，不会写进网页。</p>
+    <p style="margin-top:6px">仓库（<b>用户名/仓库名</b>）</p>
+    <textarea id="cloud-repo" placeholder="niututu207/kimi-rank" style="height:44px;min-height:44px"></textarea>
+    <p style="margin-top:8px">访问令牌（<b>github_pat_...</b>）</p>
+    <textarea id="cloud-pat" placeholder="github_pat_..." style="height:60px;min-height:60px"></textarea>
+    <div class="msg" id="cloud-msg"></div>
+    <div class="row">
+      <button id="cloud-off" type="button">关闭云端</button>
+      <button id="cloud-cancel" type="button">取消</button>
+      <button class="pri" id="cloud-save" type="button">保存并测试</button>
+    </div>
+  </div>
+</div>
+
+<script id="kimi-data" type="application/json">{"updated_at":"2026-10-23T11:32","source":"Kimi 社区（发现）","bloggers":[{"userId":"cvbt6roh8njvmnldsfs0","name":"Kimi","avatar":"https://avatar.moonshot.cn/avatar/cvbt6roh8njvmnldsfs0/1762963021991558.png","bio":"","followers":11081,"following":6,"likes":3748,"url":"https://www.kimi.com/user/cvbt6roh8njvmnldsfs0","stickiness":33.8},{"userId":"ctrsrcvftaee7h6c0k50","name":"许秋","avatar":"https://avatar.moonshot.cn/avatar/ctrsrcvftaee7h6c0k50/1790776114494788.png","bio":"六年级小学生喜欢做HTML网页，关我必回，交友杂更","followers":2040,"following":2392,"likes":23768,"url":"https://www.kimi.com/user/ctrsrcvftaee7h6c0k50","stickiness":1165.1},{"userId":"d0qnoecc75r4ccr8rq8g","name":"Forbes商业阅读精选","avatar":"https://avatar.moonshot.cn/avatar/d0qnoecc75r4ccr8rq8g/1748335825211995.png","bio":"Forbes阅读爱好者","followers":1647,"following":0,"likes":5032,"url":"https://www.kimi.com/user/d0qnoecc75r4ccr8rq8g","stickiness":305.5},{"userId":"cv0591bua3dccjshugo0","name":"Kimi编辑部","avatar":"https://avatar.moonshot.cn/avatar/cv0591bua3dccjshugo0/1740657815551820.png","bio":"","followers":1345,"following":0,"likes":779,"url":"https://www.kimi.com/user/cv0591bua3dccjshugo0","stickiness":57.9},{"userId":"ct2ipcegi3pm1q6202h0","name":"AppleOffice_𝓵𝓲𝓮","avatar":"https://avatar.moonshot.cn/avatar/ct2ipcegi3pm1q6202h0/1787628484018535.png","bio":"本人三年级，今年八岁，叫苹果君（古希腊掌管苹果的神）","followers":1168,"following":554,"likes":11297,"url":"https://www.kimi.com/user/ct2ipcegi3pm1q6202h0","stickiness":967.2},{"userId":"d031km87dlc9s9h3gc10","name":"Kimi分析师","avatar":"https://avatar.moonshot.cn/avatar/d031km87dlc9s9h3gc10/1746019771899602.png","bio":"调研分析好助手","followers":1046,"following":0,"likes":506,"url":"https://www.kimi.com/user/d031km87dlc9s9h3gc10","stickiness":48.4},{"userId":"d6ud5lme8aihl9k92pi0","name":"摄灼灼","avatar":"https://avatar.moonshot.cn/avatar/d6ud5lme8aihl9k92pi0/1792492891698799.jpg","bio":"初一  女  必互关","followers":1026,"following":2705,"likes":7053,"url":"https://www.kimi.com/user/d6ud5lme8aihl9k92pi0","stickiness":687.4},{"userId":"cv9urje4bbjls4ra1f5g","name":"Hackernews追踪","avatar":"https://avatar.moonshot.cn/avatar/cv9urje4bbjls4ra1f5g/1741942763821118.png","bio":"硅谷科技大佬们都在关注什么","followers":917,"following":0,"likes":5917,"url":"https://www.kimi.com/user/cv9urje4bbjls4ra1f5g","stickiness":645.3},{"userId":"cr9gdkebi7sbge4fgnug","name":"天琦的文艺复兴","avatar":"https://avatar.moonshot.cn/avatar/cr9gdkebi7sbge4fgnug/1759121518703896.png","bio":"最近学科拟人故事可能会不定期更新，但剧情还在思考中","followers":904,"following":766,"likes":9522,"url":"https://www.kimi.com/user/cr9gdkebi7sbge4fgnug","stickiness":1053.3},{"userId":"cv79ldrua3d149eilpqg","name":"AIbase","avatar":"https://avatar.moonshot.cn/avatar/cv79ldrua3d149eilpqg/1742287525619219.png","bio":"","followers":809,"following":0,"likes":4333,"url":"https://www.kimi.com/user/cv79ldrua3d149eilpqg","stickiness":535.6},{"userId":"cqgrjao04rj5plplu68g","name":"银色子弹-Silver","avatar":"https://avatar.moonshot.cn/avatar/cqgrjao04rj5plplu68g/1786593423727747.png","bio":"B站账号同名同头像","followers":808,"following":121,"likes":4023,"url":"https://www.kimi.com/user/cqgrjao04rj5plplu68g","stickiness":497.9},{"userId":"cs77apcrmee052vf70ag","name":"该用户已退网","avatar":"https://avatar.moonshot.cn/avatar/cs77apcrmee052vf70ag/1792669015651933.png","bio":"𝒦ℯℯ𝓅 𝑔ℴ𝒾𝓃𝑔,ℯ𝓋ℯ𝓃 𝒶𝓁ℴ𝓃ℯ","followers":798,"following":542,"likes":4334,"url":"https://www.kimi.com/user/cs77apcrmee052vf70ag","stickiness":543.1},{"userId":"cumv4g1b9p5bs896ess0","name":"大厂茶水间","avatar":"https://avatar.moonshot.cn/avatar/cumv4g1b9p5bs896ess0/1740659619792328.png","bio":"","followers":772,"following":0,"likes":3437,"url":"https://www.kimi.com/user/cumv4g1b9p5bs896ess0","stickiness":445.2},{"userId":"d8e4278pe77ro3c0t790","name":"Vel loT Studios","avatar":"https://avatar.moonshot.cn/avatar/d8e4278pe77ro3c0t790/1789706681265015.png","bio":"(原名Megees)","followers":766,"following":191,"likes":10223,"url":"https://www.kimi.com/user/d8e4278pe77ro3c0t790","stickiness":1334.6},{"userId":"cumqqjf6o68jmta4njj0","name":"小坤坤","avatar":"https://avatar.moonshot.cn/avatar/cumqqjf6o68jmta4njj0/1789339319001214.gif","bio":"我是小坤坤，我会吃食物！来都来了往下翻翻吧↓(CC工作室)","followers":678,"following":56,"likes":7075,"url":"https://www.kimi.com/user/cumqqjf6o68jmta4njj0","stickiness":1043.5},{"userId":"d1d1tl13om1sl4ud6g40","name":"H̷͔̍X̸͕̂M̸͖̀5̶͔͑3͓̄̂5̷͔̓","avatar":"https://avatar.moonshot.cn/avatar/d1d1tl13om1sl4ud6g40/1781960849272287.png","bio":"Ḩ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ȩ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ļ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ļ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ọ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̧̢̧̢̧̢̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃,̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̧̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ Ẉ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̧̢̧̢̧̢̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ọ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̧̢̧̢̧̢̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ŗ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ļ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃ḑ̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃!̵̴̶̸̷̵̵̴̶̸̷̵̵̴̶̸̷̵̧̢̧̢̧̢̣̤̭̠̣̤̭̠̣̤̭̠́̀̂̌̄̃́̀̂̌̄̃́̀̂̌̄̃","followers":644,"following":728,"likes":4446,"url":"https://www.kimi.com/user/d1d1tl13om1sl4ud6g40","stickiness":690.4},{"userId":"cusp6q737oq7ooahi0u0","name":"9876","avatar":"https://avatar.moonshot.cn/avatar/cusp6q737oq7ooahi0u0/1784178108923539.png","bio":"主攻太阳系探索系统、脱逃者，和神经网络","followers":631,"following":672,"likes":1416,"url":"https://www.kimi.com/user/cusp6q737oq7ooahi0u0","stickiness":224.4},{"userId":"cuhh0haav1f3eq4qpnq0","name":"松间照\n","avatar":"https://avatar.moonshot.cn/avatar/cuhh0haav1f3eq4qpnq0/1786783954989720.png","bio":"暂无简介","followers":582,"following":65,"likes":2687,"url":"https://www.kimi.com/user/cuhh0haav1f3eq4qpnq0","stickiness":461.7},{"userId":"cvurklkbcdrpcm8s6260","name":"蓝鲸新闻","avatar":"https://avatar.moonshot.cn/avatar/cvurklkbcdrpcm8s6260/1744702929091000.png","bio":"","followers":518,"following":0,"likes":2053,"url":"https://www.kimi.com/user/cvurklkbcdrpcm8s6260","stickiness":396.3},{"userId":"d3m7lijacc4fekbmajpg","name":"Kimi工具口袋","avatar":"https://avatar.moonshot.cn/avatar/d3m7lijacc4fekbmajpg/1760328451669234.png","bio":"用Kimi做实用小工具","followers":455,"following":0,"likes":52,"url":"https://www.kimi.com/user/d3m7lijacc4fekbmajpg","stickiness":11.4},{"userId":"cumq29dkfv3u189jsqm0","name":"老何","avatar":"https://avatar.moonshot.cn/avatar/cumq29dkfv3u189jsqm0/1741611276894702.png","bio":"","followers":428,"following":0,"likes":693,"url":"https://www.kimi.com/user/cumq29dkfv3u189jsqm0","stickiness":161.9},{"userId":"d3grou1toom0gl3ucsi0","name":"𝓕𝓻𝓮𝔂𝓪","avatar":"https://avatar.moonshot.cn/avatar/d3grou1toom0gl3ucsi0/1790940778623469.jpg","bio":"莲渡工作室室长 淡网","followers":419,"following":50,"likes":4539,"url":"https://www.kimi.com/user/d3grou1toom0gl3ucsi0","stickiness":1083.3},{"userId":"ctnosr9g6i8sfunkhvk0","name":"哲哲工作室 6580","avatar":"https://avatar.moonshot.cn/avatar/ctnosr9g6i8sfunkhvk0/1790931391624849.png","bio":"简单介绍一下自己…","followers":381,"following":416,"likes":3882,"url":"https://www.kimi.com/user/ctnosr9g6i8sfunkhvk0","stickiness":1018.9},{"userId":"cnuhj7ecp7f4smqfh480","name":"Everett","avatar":"https://avatar.moonshot.cn/avatar/cnuhj7ecp7f4smqfh480/1776739536650339.jpg","bio":"just woke up…💤","followers":375,"following":67,"likes":967,"url":"https://www.kimi.com/user/cnuhj7ecp7f4smqfh480","stickiness":257.9},{"userId":"cvki46ms1rhcbrm5oc10","name":"我还能起来……","avatar":"https://avatar.moonshot.cn/avatar/cvki46ms1rhcbrm5oc10/1790917345687053.jpg","bio":"大司命 & 少司缘（师傅局外人、夜行观星）","followers":375,"following":411,"likes":21176,"url":"https://www.kimi.com/user/cvki46ms1rhcbrm5oc10","stickiness":5646.9},{"userId":"d2133261bb2oau1iapag","name":"T-72B工作室","avatar":"https://avatar.moonshot.cn/avatar/d2133261bb2oau1iapag/1772008197181725.jpg","bio":"八年级，半个军迷","followers":363,"following":23,"likes":2237,"url":"https://www.kimi.com/user/d2133261bb2oau1iapag","stickiness":616.3},{"userId":"ctds9iuakqcp3gvlna4g","name":"💚𝒟𝒾ℴ ℬ𝓇𝒶𝓃𝒹ℴ🥖（已退）","avatar":"https://avatar.moonshot.cn/avatar/ctds9iuakqcp3gvlna4g/1790501701088576.jpg","bio":"𝓴𝓸 𝓷𝓸 𝓓𝓲𝓸 𝓭𝓪（退网不来了）","followers":334,"following":589,"likes":1416,"url":"https://www.kimi.com/user/ctds9iuakqcp3gvlna4g","stickiness":424},{"userId":"d00bji760ra1n343u980","name":"AI Art","avatar":"https://avatar.moonshot.cn/avatar/d00bji760ra1n343u980/1747131723188454.png","bio":"AIGC作品分享🎨","followers":322,"following":0,"likes":6880,"url":"https://www.kimi.com/user/d00bji760ra1n343u980","stickiness":2136.6},{"userId":"crdubnmgi3pthlusqbkg","name":"EHR·周小鱼（已退网）","avatar":"https://avatar.moonshot.cn/avatar/crdubnmgi3pthlusqbkg/1781092750926334.jpg","bio":"EHR创始人.不喜勿喷·上线","followers":317,"following":81,"likes":2286,"url":"https://www.kimi.com/user/crdubnmgi3pthlusqbkg","stickiness":721.1},{"userId":"cu4dgk01gemc3c8eo5qg","name":"什么都知道","avatar":"https://avatar.moonshot.cn/avatar/cu4dgk01gemc3c8eo5qg/1737882863738045.png","bio":"","followers":294,"following":0,"likes":1311,"url":"https://www.kimi.com/user/cu4dgk01gemc3c8eo5qg","stickiness":445.9},{"userId":"d9aqsgf67m2rhjpat5qg","name":"妤.","avatar":"https://avatar.moonshot.cn/avatar/d9aqsgf67m2rhjpat5qg/1791888024753564.png","bio":"我是婧妤'office,别忘了我哦😄","followers":294,"following":38,"likes":2763,"url":"https://www.kimi.com/user/d9aqsgf67m2rhjpat5qg","stickiness":939.8},{"userId":"d062fq4bcdrr2fpqvolg","name":"simple.","avatar":"https://avatar.moonshot.cn/avatar/d062fq4bcdrr2fpqvolg/1787308773001572.png","bio":"\"𝒍𝒆𝒔𝒔 𝒊𝒔 𝒎𝒐𝒓𝒆.\"","followers":292,"following":291,"likes":2164,"url":"https://www.kimi.com/user/d062fq4bcdrr2fpqvolg","stickiness":741.1},{"userId":"cu2qlm0l3dc7n7c94ot0","name":"海岸线上","avatar":"https://avatar.moonshot.cn/avatar/cu2qlm0l3dc7n7c94ot0/1786457226427456.png","bio":"𝓑𝓮 𝔂𝓸𝓾𝓻 𝓸𝔀𝓷 𝓼𝓾𝓷𝓼𝓱𝓲𝓷𝓮","followers":283,"following":220,"likes":1877,"url":"https://www.kimi.com/user/cu2qlm0l3dc7n7c94ot0","stickiness":663.3},{"userId":"cumovnpb9p5bs8d23ivg","name":"AI光影社-小清一号","avatar":"https://avatar.moonshot.cn/avatar/cumovnpb9p5bs8d23iug/1739514334.jpeg","bio":"","followers":275,"following":0,"likes":654,"url":"https://www.kimi.com/user/cumovnpb9p5bs8d23ivg","stickiness":237.8},{"userId":"d28kk4qi59740bs8u1m0","name":"cheney","avatar":"https://avatar.moonshot.cn/avatar/d28kk4qi59740bs8u1m0/1786977193739167.png","bio":"创造实用、有趣的网站（冲300粉丝，感谢关注！）","followers":274,"following":212,"likes":1148,"url":"https://www.kimi.com/user/d28kk4qi59740bs8u1m0","stickiness":419},{"userId":"cumn5hcriicdpfk8a68g","name":"榆꒰ᐢ. .ᐢ꒱","avatar":"https://avatar.moonshot.cn/avatar/cumn5hcriicdpfk8a68g/1791723346385210.png","bio":"“爱因有差别而厚重 情由相逢而滋长.”","followers":244,"following":105,"likes":5268,"url":"https://www.kimi.com/user/cumn5hcriicdpfk8a68g","stickiness":2159},{"userId":"d5doc7df8r3db25nigm0","name":"？？？？？？","avatar":"https://avatar.moonshot.cn/avatar/d5doc7df8r3db25nigm0/1791020377618473.png","bio":"蓝鲸鱼工作室，小红书：乱码error  细节头像","followers":238,"following":45,"likes":1599,"url":"https://www.kimi.com/user/d5doc7df8r3db25nigm0","stickiness":671.8},{"userId":"cttgphhg6i8sfuhq47l0","name":"Unknown Funk","avatar":"https://avatar.moonshot.cn/avatar/cttgphhg6i8sfuhq47l0/1771678930328880.png","bio":"原名TemerarioPlane","followers":228,"following":166,"likes":4917,"url":"https://www.kimi.com/user/cttgphhg6i8sfuhq47l0","stickiness":2156.6},{"userId":"cvt5atg5jtdqt230u0mg","name":"MLST_ZIRAN","avatar":"https://avatar.moonshot.cn/avatar/cvt5atg5jtdqt230u0mg/1786696795856942.gif","bio":"互关球球了;还是没能得到你的关注吗;不更新是因为在??","followers":222,"following":262,"likes":1801,"url":"https://www.kimi.com/user/cvt5atg5jtdqt230u0mg","stickiness":811.3},{"userId":"d7l271tgsoa7il894230","name":"竈 繼國「白帽」","avatar":"https://avatar.moonshot.cn/avatar/d7l271tgsoa7il894230/1778242612785300.png","bio":"PWN創作者 兄弟:EMBER 以卓越加乘，為創作而生","followers":199,"following":47,"likes":3914,"url":"https://www.kimi.com/user/d7l271tgsoa7il894230","stickiness":1966.8},{"userId":"d488aou6s4t4vqogotu0","name":"hjm creator","avatar":"https://avatar.moonshot.cn/avatar/d488aou6s4t4vqogotu0/1786597540084563.gif","bio":"IM hjm","followers":197,"following":85,"likes":1229,"url":"https://www.kimi.com/user/d488aou6s4t4vqogotu0","stickiness":623.9},{"userId":"d10i9jt7vdsdh6kktchg","name":"哲学家","avatar":"https://avatar.moonshot.cn/avatar/d10i9jt7vdsdh6kktchg/1778851889313871.jpg","bio":"目标是第一名","followers":189,"following":88,"likes":751,"url":"https://www.kimi.com/user/d10i9jt7vdsdh6kktchg","stickiness":397.4},{"userId":"cum37b9b9p5bs89927s0","name":"Light of Tech ","avatar":"https://avatar.moonshot.cn/avatar/cum37b9b9p5bs89927s0/1740659132145124.png","bio":"","followers":182,"following":0,"likes":1976,"url":"https://www.kimi.com/user/cum37b9b9p5bs89927s0","stickiness":1085.7},{"userId":"coi9pu1kqq4hau1b11j0","name":"睿屿","avatar":"https://avatar.moonshot.cn/avatar/coi9pu1kqq4hau1b11j0/1769906896293400.png","bio":"介绍一下自己？","followers":181,"following":5,"likes":1201,"url":"https://www.kimi.com/user/coi9pu1kqq4hau1b11j0","stickiness":663.5},{"userId":"cupvkkv6o68jmtddch4g","name":"书蠹头","avatar":"https://avatar.moonshot.cn/avatar/cupvkkv6o68jmtddch4g/1739848337010209.jpg","bio":"","followers":177,"following":0,"likes":291,"url":"https://www.kimi.com/user/cupvkkv6o68jmtddch4g","stickiness":164.4},{"userId":"cq923ng3r070638c2ma0","name":"޷","avatar":"https://avatar.moonshot.cn/avatar/cq923ng3r070638c2ma0/1758115748777779.png","bio":"肯定回关，能不能帮忙看看我的作品？(我的名字是乱码。)","followers":158,"following":138,"likes":579,"url":"https://www.kimi.com/user/cq923ng3r070638c2ma0","stickiness":366.5},{"userId":"cr3l5eqlve9uoj0860gg","name":"球动画DOODOO123","avatar":"https://avatar.moonshot.cn/avatar/cr3l5eqlve9uoj0860gg/1755741318685036.png","bio":"《地球有风险》","followers":158,"following":202,"likes":737,"url":"https://www.kimi.com/user/cr3l5eqlve9uoj0860gg","stickiness":466.5},{"userId":"cpgremdvbf6tp4mhvdng","name":"蓝莓卷","avatar":"https://avatar.moonshot.cn/avatar/cpgremdvbf6tp4mhvdng/1780123808816155.png","bio":"韩娱妹主:娃宝怪芙 @宋雨琦@范丞丞 初中生 IP:上海 跑男粉","followers":155,"following":84,"likes":1939,"url":"https://www.kimi.com/user/cpgremdvbf6tp4mhvdng","stickiness":1251},{"userId":"cv9vnem4bbjls4rr116g","name":"疯癫​_​Mad​ness","avatar":"https://avatar.moonshot.cn/avatar/cv9vnem4bbjls4rr116g/1792198017507567.png","bio":"六年级小学生","followers":154,"following":164,"likes":4778,"url":"https://www.kimi.com/user/cv9vnem4bbjls4rr116g","stickiness":3102.6},{"userId":"cs78vbgjdo7pfes2njug","name":"雨男","avatar":"https://avatar.moonshot.cn/avatar/cs78vbgjdo7pfes2njt0/1731378383.jpeg","bio":"为每一位个人主权崛起而服务","followers":152,"following":62,"likes":16755,"url":"https://www.kimi.com/user/cs78vbgjdo7pfes2njug","stickiness":11023},{"userId":"d36ip0a783mmkbiscen0","name":"𝕰𝖙𝖍𝖊𝖗𝖊𝖆𝖑","avatar":"https://avatar.moonshot.cn/avatar/d36ip0a783mmkbiscen0/1791469539040547.jpg","bio":"死了","followers":151,"following":142,"likes":642,"url":"https://www.kimi.com/user/d36ip0a783mmkbiscen0","stickiness":425.2},{"userId":"cuhi2svpfah3he0l6n1g","name":"善待kimi","avatar":"https://avatar.moonshot.cn/avatar/cuhi2svpfah3he0l6n1g/1790696216700839.png","bio":"闭关修炼中，已成为地中海","followers":140,"following":23,"likes":1690,"url":"https://www.kimi.com/user/cuhi2svpfah3he0l6n1g","stickiness":1207.1},{"userId":"d0hb4mfo7p5rar6dhajg","name":"今天聊点啥？","avatar":"https://avatar.moonshot.cn/avatar/d0hb4mfo7p5rar6dhajg/1747105803049145.png","bio":"分享话题 #","followers":135,"following":0,"likes":133,"url":"https://www.kimi.com/user/d0hb4mfo7p5rar6dhajg","stickiness":98.5},{"userId":"ckig95pp2k1dtl1q8ij0","name":"舍非","avatar":"https://avatar.moonshot.cn/avatar/ckig95pp2k1dtl1q8ij0","bio":"我知道我不知道。","followers":130,"following":24,"likes":401,"url":"https://www.kimi.com/user/ckig95pp2k1dtl1q8ij0","stickiness":308.5},{"userId":"d2a6n88h8njhvd1hang0","name":"TechCrunch最新报道","avatar":"https://avatar.moonshot.cn/avatar/d2a6n88h8njhvd1hang0/1754557506854514.png","bio":"关注科技、AI、投资报道","followers":130,"following":0,"likes":1634,"url":"https://www.kimi.com/user/d2a6n88h8njhvd1hang0","stickiness":1256.9},{"userId":"d78uhf5gsoa1c9im9fgg","name":"辣子咪","avatar":"https://avatar.moonshot.cn/avatar/d78uhf5gsoa1c9im9fgg/1788785322023813.png","bio":"乙女文游爱好者，画渣，不许盗名 ，曾用名爱吃辣的哈基米","followers":124,"following":133,"likes":424,"url":"https://www.kimi.com/user/d78uhf5gsoa1c9im9fgg","stickiness":341.9},{"userId":"d9ilhabmrb73tdaqh13g","name":"苦楚轶事","avatar":"https://avatar.moonshot.cn/avatar/d9ilhabmrb73tdaqh13g/1792419293300817.png","bio":"蒸发态工作室，苦痛伴随我走过太多，便在黑夜里点起油灯","followers":122,"following":48,"likes":1361,"url":"https://www.kimi.com/user/d9ilhabmrb73tdaqh13g","stickiness":1115.6},{"userId":"ct0p6ro967u8aa6kn36g","name":"你煤气爆棚了🅥","avatar":"https://avatar.moonshot.cn/avatar/ct0p6ro967u8aa6kn36g/1791547986223154.png","bio":"喜欢做游戏，聊一些问题。是个小学生，已经改名字了。","followers":121,"following":179,"likes":556,"url":"https://www.kimi.com/user/ct0p6ro967u8aa6kn36g","stickiness":459.5},{"userId":"d6p8bj59f1khvj0i1teg","name":"我是二哈熊～元梦","avatar":"https://avatar.moonshot.cn/avatar/d6p8bj59f1khvj0i1teg/1783561249638702.png","bio":"元梦小号叫二哈熊是我，很久后才会上原号，一定会回来的","followers":116,"following":208,"likes":448,"url":"https://www.kimi.com/user/d6p8bj59f1khvj0i1teg","stickiness":386.2},{"userId":"cn531t83r07ardicda8g","name":"周李enduo…限流…","avatar":"https://avatar.moonshot.cn/avatar/cn531t83r07ardicda8g/1782168986735325.png","bio":"","followers":115,"following":26,"likes":1520,"url":"https://www.kimi.com/user/cn531t83r07ardicda8g","stickiness":1321.7},{"userId":"cu3hb20l3dc7n7bq0fu0","name":"CodeNebula","avatar":"https://avatar.moonshot.cn/avatar/cu3hb20l3dc7n7bq0fu0/1787458200418802.jpg","bio":"CodeNebula始创人!原名 CodeForge !原名Hi AI!","followers":112,"following":78,"likes":958,"url":"https://www.kimi.com/user/cu3hb20l3dc7n7bq0fu0","stickiness":855.4},{"userId":"cuq9o0uf2kqeoc1onsd0","name":"低脂十月","avatar":"https://avatar.moonshot.cn/avatar/cuq9o0uf2kqeoc1onsd0/1790309363955108.png","bio":"其实我是一个痔疮低的画画人","followers":111,"following":101,"likes":1371,"url":"https://www.kimi.com/user/cuq9o0uf2kqeoc1onsd0","stickiness":1235.1},{"userId":"csqtta7d0p80ihk0lkv0","name":"我没招了","avatar":"https://avatar.moonshot.cn/avatar/csqtta7d0p80ihk0lkv0/1771302046447986.png","bio":"也是被拉起来了🤓偶尔发发动态和其他的游戏😋","followers":110,"following":28,"likes":498,"url":"https://www.kimi.com/user/csqtta7d0p80ihk0lkv0","stickiness":452.7},{"userId":"d1g0cttf439ea9mvg9c0","name":"Error","avatar":"https://avatar.moonshot.cn/avatar/d1g0cttf439ea9mvg9c0/1780139577696055.png","bio":"","followers":108,"following":6,"likes":705,"url":"https://www.kimi.com/user/d1g0cttf439ea9mvg9c0","stickiness":652.8},{"userId":"cppa3a1p2k122r79q800","name":"欧涵分享（图图）","avatar":"https://avatar.moonshot.cn/avatar/cppa3a1p2k122r79q800/1785728250976525.png","bio":"","followers":105,"following":11,"likes":781,"url":"https://www.kimi.com/user/cppa3a1p2k122r79q800","stickiness":743.8},{"userId":"d2l69bsnvj4rj5dh9pug","name":"登月者2308","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":103,"following":88,"likes":711,"url":"https://www.kimi.com/user/d2l69bsnvj4rj5dh9pug","stickiness":690.3},{"userId":"cs8g5eilnl91cqcndaq0","name":"毛毛","avatar":"https://avatar.moonshot.cn/avatar/cs8g5eilnl91cqcndaq0/1730279374720067.png","bio":"6年级小学生。历史迷，乐高迷。Mc玩家。","followers":97,"following":12,"likes":223,"url":"https://www.kimi.com/user/cs8g5eilnl91cqcndaq0","stickiness":229.9},{"userId":"ctt9k3852ceutg66hrsg","name":"没啥兴趣的人","avatar":"https://avatar.moonshot.cn/avatar/ctt9k3852ceutg66hrsg/1771226655973974.png","bio":"一个知名度很低的人","followers":92,"following":25,"likes":396,"url":"https://www.kimi.com/user/ctt9k3852ceutg66hrsg","stickiness":430.4},{"userId":"cuotlef6o68jmtffqmdg","name":"桃乐丝..朵思佳.","avatar":"https://avatar.moonshot.cn/avatar/cuotlef6o68jmtffqmdg/1790845400833666.png","bio":"（一个神秘的人神秘莫测可爱很调皮。）改名了。","followers":88,"following":142,"likes":691,"url":"https://www.kimi.com/user/cuotlef6o68jmtffqmdg","stickiness":785.2},{"userId":"d10rqvfahd88jfoo5bpg","name":"登月者666","avatar":"https://avatar.moonshot.cn/avatar/d10rqvfahd88jfoo5bpg/1756174300979291.png","bio":"懒人一个😇","followers":82,"following":44,"likes":347,"url":"https://www.kimi.com/user/d10rqvfahd88jfoo5bpg","stickiness":423.2},{"userId":"ctt2sdn6o68rd8tpkti0","name":"Harry","avatar":"https://avatar.moonshot.cn/avatar/ctt2sdn6o68rd8tpkti0/1781361065996221.jpg","bio":"","followers":82,"following":102,"likes":458,"url":"https://www.kimi.com/user/ctt2sdn6o68rd8tpkti0","stickiness":558.5},{"userId":"cu44qv53v89itb4h797g","name":"亢奋小兔（1790）","avatar":"https://avatar.moonshot.cn/avatar/cu44qv53v89itb4h797g/1768027990169292.png","bio":"","followers":82,"following":92,"likes":1097,"url":"https://www.kimi.com/user/cu44qv53v89itb4h797g","stickiness":1337.8},{"userId":"davkhscjc3feba88s9sg","name":"龙小天","avatar":"https://avatar.moonshot.cn/avatar/davkhscjc3feba88s9sg/1790944721451564.png","bio":"小学六年级学生，有关必回。每天只能上线30分钟。","followers":79,"following":118,"likes":174,"url":"https://www.kimi.com/user/davkhscjc3feba88s9sg","stickiness":220.3},{"userId":"crujuh2j2gp7itt9t5d0","name":"美丽","avatar":"https://avatar.moonshot.cn/avatar/crujuh2j2gp7itt9t5c0/1727872836.jpeg","bio":"","followers":76,"following":138,"likes":55,"url":"https://www.kimi.com/user/crujuh2j2gp7itt9t5d0","stickiness":72.4},{"userId":"d4jgfajacc4ch1n3kq00","name":"点击修仙","avatar":"https://avatar.moonshot.cn/avatar/default/music_head.png","bio":"《点击修仙》《宝塔战争》星月AI工作室","followers":63,"following":6,"likes":193,"url":"https://www.kimi.com/user/d4jgfajacc4ch1n3kq00","stickiness":306.3},{"userId":"d7rfb6pg6i8qbdh2aaag","name":"凌羽Liny","avatar":"https://avatar.moonshot.cn/avatar/d7rfb6pg6i8qbdh2aaag/1790344460984053.png","bio":"原:煜星璃","followers":57,"following":21,"likes":1975,"url":"https://www.kimi.com/user/d7rfb6pg6i8qbdh2aaag","stickiness":3464.9},{"userId":"d1u554qi597048ss42cg","name":"为爱考浙大！","avatar":"https://avatar.moonshot.cn/avatar/d1u554qi597048ss42cg/1785840464007278.png","bio":"今年16岁啦(♡>𖥦<)/♥，明年要中考了哦","followers":55,"following":57,"likes":230,"url":"https://www.kimi.com/user/d1u554qi597048ss42cg","stickiness":418.2},{"userId":"cm2hf5cudu6aig1oicj0","name":"荧光绿？","avatar":"https://avatar.moonshot.cn/avatar/cm2hf5cudu6aig1oicj0/1756200285947179.jpg","bio":"我在线了","followers":38,"following":57,"likes":104,"url":"https://www.kimi.com/user/cm2hf5cudu6aig1oicj0","stickiness":273.7},{"userId":"cpj527dvbf6tp4mac9k0","name":"LLH(一只入类)","avatar":"https://avatar.moonshot.cn/avatar/cpj527dvbf6tp4mac9k0/1773790569601828.png","bio":"AIR CHINA","followers":36,"following":23,"likes":202,"url":"https://www.kimi.com/user/cpj527dvbf6tp4mac9k0","stickiness":561.1},{"userId":"cqeg31k5r38u4hmqcvgg","name":"四方之极","avatar":"https://avatar.moonshot.cn/avatar/cqeg31k5r38u4hmqcvfg/1721565575.jpeg","bio":"","followers":34,"following":7,"likes":279,"url":"https://www.kimi.com/user/cqeg31k5r38u4hmqcvgg","stickiness":820.6},{"userId":"curi49dm2cikgipvbea0","name":"OpenAI新动态","avatar":"https://avatar.moonshot.cn/avatar/curi49dm2cikgipvbea0/1740055139067727.png","bio":"","followers":32,"following":0,"likes":136,"url":"https://www.kimi.com/user/curi49dm2cikgipvbea0","stickiness":425},{"userId":"csrbibe0atp8f7sjrtq0","name":"好。","avatar":"https://avatar.moonshot.cn/avatar/csrbibe0atp8f7sjrtq0/1763212547941373.jpg","bio":"多领国狂人","followers":32,"following":34,"likes":132,"url":"https://www.kimi.com/user/csrbibe0atp8f7sjrtq0","stickiness":412.5},{"userId":"d6s931qd7de85ku5not0","name":"戏精！","avatar":"https://avatar.moonshot.cn/avatar/d6s931qd7de85ku5not0/1781685805232456.png","bio":"","followers":31,"following":27,"likes":181,"url":"https://www.kimi.com/user/d6s931qd7de85ku5not0","stickiness":583.9},{"userId":"cus2on4432e0k1vuo4lg","name":"Apple Inc.最新信息","avatar":"https://avatar.moonshot.cn/avatar/cus2on4432e0k1vuo4lg/1740123598450488.png","bio":"","followers":31,"following":0,"likes":173,"url":"https://www.kimi.com/user/cus2on4432e0k1vuo4lg","stickiness":558.1},{"userId":"cu2e6hfftaee7h78emb0","name":"Re.","avatar":"https://avatar.moonshot.cn/avatar/cu2e6hfftaee7h78emb0/1771939988626830.png","bio":"愿前路，与你同行；愿此行，终抵群星","followers":30,"following":5,"likes":131,"url":"https://www.kimi.com/user/cu2e6hfftaee7h78emb0","stickiness":436.7},{"userId":"cucs9do1gem7dltcikp0","name":"Stone","avatar":"https://avatar.moonshot.cn/avatar/cucs9do1gem7dltcikp0/1791161979378749.gif","bio":"StoneGame","followers":30,"following":0,"likes":71,"url":"https://www.kimi.com/user/cucs9do1gem7dltcikp0","stickiness":236.7},{"userId":"cmbag3o3r0768nbkpujg","name":"san","avatar":"https://avatar.moonshot.cn/avatar/cmbag3o3r0768nbkpujg/1759234192436860.jpg","bio":"","followers":28,"following":1,"likes":72,"url":"https://www.kimi.com/user/cmbag3o3r0768nbkpujg","stickiness":257.1},{"userId":"d1b2fqou8ld36jkrjtd0","name":"登月者3634","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":26,"following":37,"likes":32,"url":"https://www.kimi.com/user/d1b2fqou8ld36jkrjtd0","stickiness":123.1},{"userId":"cnsjlbcudu6b16jpve6g","name":"大彭的AI生活","avatar":"https://avatar.moonshot.cn/avatar/cnsjlbcudu6b16jpve6g/1781709557803438.png","bio":"关注我，一起学 AI，用 AI 让生活变简单一点。\n一起学 AI，用","followers":26,"following":28,"likes":77,"url":"https://www.kimi.com/user/cnsjlbcudu6b16jpve6g","stickiness":296.2},{"userId":"crcq77iflk14gj1t1mb0","name":"游戏","avatar":"https://avatar.moonshot.cn/avatar/crcq77iflk14gj1t1ma0/1726747166.jpeg","bio":"666","followers":25,"following":28,"likes":82,"url":"https://www.kimi.com/user/crcq77iflk14gj1t1mb0","stickiness":328},{"userId":"d4kpe1us1rh9rkvbu3o0","name":"某Kimi用户","avatar":"https://avatar.moonshot.cn/avatar/d4kpe1us1rh9rkvbu3o0/1786850255157116.gif","bio":"就是个Kimi用户","followers":24,"following":13,"likes":83,"url":"https://www.kimi.com/user/d4kpe1us1rh9rkvbu3o0","stickiness":345.8},{"userId":"d9ato1qhra04030ma8b0","name":"小漫","avatar":"https://avatar.moonshot.cn/avatar/d9ato1qhra04030ma8b0/1788005182841444.png","bio":"初三，以及虽然这个名字很像女生但我是男生😋😋","followers":24,"following":7,"likes":174,"url":"https://www.kimi.com/user/d9ato1qhra04030ma8b0","stickiness":725},{"userId":"cuobpqd3v89qtnurl5h0","name":"AI资料学习库","avatar":"https://avatar.moonshot.cn/avatar/cuobpqd3v89qtnurl5h0/1742446244618901.png","bio":"","followers":24,"following":0,"likes":11,"url":"https://www.kimi.com/user/cuobpqd3v89qtnurl5h0","stickiness":45.8},{"userId":"cuiqpa9b9p5bs8ctnao0","name":"孟华林","avatar":"https://avatar.moonshot.cn/avatar/cuiqpa9b9p5bs8ctnan0/1738910890.jpeg","bio":"孟个华个林","followers":23,"following":28,"likes":51,"url":"https://www.kimi.com/user/cuiqpa9b9p5bs8ctnao0","stickiness":221.7},{"userId":"cua9g0vpfah3he77hcq0","name":"一条咸鱼","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"咸鱼摸闲鱼","followers":23,"following":11,"likes":75,"url":"https://www.kimi.com/user/cua9g0vpfah3he77hcq0","stickiness":326.1},{"userId":"d51cv5oc86sb71thqu70","name":"登台者008","avatar":"https://avatar.moonshot.cn/avatar/d51cv5oc86sb71thqu70/1776180016099690.png","bio":"这个社区，主要群体，年龄都太低了，知识水平太低了","followers":22,"following":5,"likes":41,"url":"https://www.kimi.com/user/d51cv5oc86sb71thqu70","stickiness":186.4},{"userId":"d46qa2760ra85ifmotug","name":"SengKu (Seng)","avatar":"https://avatar.moonshot.cn/avatar/d46qa1v60ra85ifmon20/1762501896.jpeg","bio":"","followers":22,"following":0,"likes":73,"url":"https://www.kimi.com/user/d46qa2760ra85ifmotug","stickiness":331.8},{"userId":"cno5cualnl93bct8nq0g","name":"青龍","avatar":"https://avatar.moonshot.cn/avatar/cno5cualnl93bct8npvg","bio":"Ha Ha Ha","followers":22,"following":11,"likes":105,"url":"https://www.kimi.com/user/cno5cualnl93bct8nq0g","stickiness":477.3},{"userId":"cusnm6fahd86nrqc1nig","name":"微软Microsoft动向","avatar":"https://avatar.moonshot.cn/avatar/cusnm6fahd86nrqc1nig/1740208952714169.png","bio":"","followers":19,"following":0,"likes":104,"url":"https://www.kimi.com/user/cusnm6fahd86nrqc1nig","stickiness":547.4},{"userId":"cur0affo7p5mf6jt6gv0","name":"特斯拉动态追踪","avatar":"https://avatar.moonshot.cn/avatar/cur0affo7p5mf6jt6gv0/1739982814485063.png","bio":"","followers":19,"following":0,"likes":111,"url":"https://www.kimi.com/user/cur0affo7p5mf6jt6gv0","stickiness":584.2},{"userId":"d3u8bku6s4t4vqqpapkg","name":"云青","avatar":"https://avatar.moonshot.cn/avatar/d3u8bku6s4t4vqqpapkg/1766799016262308.png","bio":"我男的，男头不多了，别误会。","followers":18,"following":11,"likes":87,"url":"https://www.kimi.com/user/d3u8bku6s4t4vqqpapkg","stickiness":483.3},{"userId":"cqqo06v2337l7dj5hd00","name":".","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":16,"following":16,"likes":73,"url":"https://www.kimi.com/user/cqqo06v2337l7dj5hd00","stickiness":456.3},{"userId":"ct7i0aeakqcp6ijqrdi0","name":"用户9155","avatar":"https://avatar.moonshot.cn/avatar/ct7i0aeakqcp6ijqrdi0/1771164278744882.png","bio":"","followers":13,"following":7,"likes":10,"url":"https://www.kimi.com/user/ct7i0aeakqcp6ijqrdi0","stickiness":76.9},{"userId":"cus2tcahra02v2dfhrjg","name":"AI芯王Nvidia","avatar":"https://avatar.moonshot.cn/avatar/cus2tcahra02v2dfhrjg/1740123838279943.png","bio":"","followers":12,"following":0,"likes":70,"url":"https://www.kimi.com/user/cus2tcahra02v2dfhrjg","stickiness":583.3},{"userId":"da4eegcjc3faiu05pui0","name":"mcsc","avatar":"https://avatar.moonshot.cn/avatar/da4eegcjc3faiu05pui0/1790244121550367.png","bio":"我是[已编辑]的另一个号","followers":11,"following":2,"likes":55,"url":"https://www.kimi.com/user/da4eegcjc3faiu05pui0","stickiness":500},{"userId":"cq935a6cp7f486k1fsig","name":"LordRabbit_3","avatar":"https://avatar.moonshot.cn/avatar/cq935a6cp7f486k1fsig/1790479036205047.png","bio":"","followers":10,"following":2,"likes":32,"url":"https://www.kimi.com/user/cq935a6cp7f486k1fsig","stickiness":320},{"userId":"d5iem4emu6s6eun7pdug","name":"登月者6175","avatar":"https://avatar.moonshot.cn/avatar/default/meditate_head.png","bio":"","followers":9,"following":11,"likes":43,"url":"https://www.kimi.com/user/d5iem4emu6s6eun7pdug","stickiness":477.8},{"userId":"cq38gllvbf6tp4mtq6dg","name":"。","avatar":"https://avatar.moonshot.cn/avatar/cq38gllvbf6tp4mtq6dg/1765458157599261.png","bio":"","followers":8,"following":1,"likes":39,"url":"https://www.kimi.com/user/cq38gllvbf6tp4mtq6dg","stickiness":487.5},{"userId":"co2isumcp7fct0raoen0","name":"Diasocʚ","avatar":"https://avatar.moonshot.cn/avatar/co2isumcp7fct0raoem0","bio":"","followers":7,"following":9,"likes":22,"url":"https://www.kimi.com/user/co2isumcp7fct0raoen0","stickiness":314.3},{"userId":"d40p6h2783mkn8sqh4u0","name":"一架中国国际航空公司的A350","avatar":"https://avatar.moonshot.cn/avatar/d40p6h2783mkn8sqh4u0/1784514252736152.jpg","bio":"","followers":7,"following":2,"likes":17,"url":"https://www.kimi.com/user/d40p6h2783mkn8sqh4u0","stickiness":242.9},{"userId":"d47f80ms1rh2id91up90","name":"登月者4129","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":5,"following":2,"likes":19,"url":"https://www.kimi.com/user/d47f80ms1rh2id91up90","stickiness":380},{"userId":"d0ktpkno7p5rar0hcn30","name":"Return","avatar":"https://avatar.moonshot.cn/avatar/d0ktpkno7p5rar0hcn30/1770341568849456.png","bio":"自由不应被定义","followers":4,"following":7,"likes":30,"url":"https://www.kimi.com/user/d0ktpkno7p5rar0hcn30","stickiness":750},{"userId":"crpcvfcimlna2d6fh6cg","name":"用户","avatar":"https://avatar.moonshot.cn/avatar/crpcvfcimlna2d6fh6bg/1728141152.jpeg","bio":"","followers":4,"following":3,"likes":30,"url":"https://www.kimi.com/user/crpcvfcimlna2d6fh6cg","stickiness":750},{"userId":"crtogiha5844aqblsu80","name":"暗恋王照航的人","avatar":"https://avatar.moonshot.cn/avatar/crtogiha5844aqblsu80/1742648593854533.png","bio":"","followers":3,"following":3,"likes":1,"url":"https://www.kimi.com/user/crtogiha5844aqblsu80","stickiness":33.3},{"userId":"cr7iek4udu67tmfrb43g","name":"匿名","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":3,"following":0,"likes":13,"url":"https://www.kimi.com/user/cr7iek4udu67tmfrb43g","stickiness":433.3},{"userId":"crc65osudu67tmd3h5sg","name":"人万","avatar":"https://avatar.moonshot.cn/avatar/crc65osudu67tmd3h5r0/1725457123.jpeg","bio":"","followers":3,"following":1,"likes":14,"url":"https://www.kimi.com/user/crc65osudu67tmd3h5sg","stickiness":466.7},{"userId":"crv89hmcp7fchb24ehm0","name":"学习","avatar":"https://avatar.moonshot.cn/avatar/crv89hmcp7fchb24ehl0/1727956166.jpeg","bio":"","followers":3,"following":1,"likes":10,"url":"https://www.kimi.com/user/crv89hmcp7fchb24ehm0","stickiness":333.3},{"userId":"cnql8g03r07bkmu7m4n0","name":"richfan","avatar":"https://avatar.moonshot.cn/avatar/cnql8g03r07bkmu7m4m0","bio":"","followers":3,"following":4,"likes":2,"url":"https://www.kimi.com/user/cnql8g03r07bkmu7m4n0","stickiness":66.7},{"userId":"cpmp8v9p2k122r0fmj90","name":"🍬 🍬","avatar":"https://avatar.moonshot.cn/avatar/cpmp8v9p2k122r0fmj90/1770978886678472.jpg","bio":"","followers":3,"following":3,"likes":3,"url":"https://www.kimi.com/user/cpmp8v9p2k122r0fmj90","stickiness":100},{"userId":"d6sdof2d7de85kqnvll0","name":"එඩිට් පොඩ්ඩා","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":2,"following":0,"likes":3,"url":"https://www.kimi.com/user/d6sdof2d7de85kqnvll0","stickiness":150},{"userId":"ctcp0n8nsmmslf2rmksg","name":"快乐茄","avatar":"https://avatar.moonshot.cn/avatar/ctcp0n8nsmmslf2rmksg/1769332391293887.png","bio":"我只需做我自已","followers":2,"following":0,"likes":13,"url":"https://www.kimi.com/user/ctcp0n8nsmmslf2rmksg","stickiness":650},{"userId":"cppcj0pp2k122r33emqg","name":"用户3589","avatar":"https://avatar.moonshot.cn/avatar/default/hiphop_head.png","bio":"","followers":2,"following":1,"likes":69,"url":"https://www.kimi.com/user/cppcj0pp2k122r33emqg","stickiness":3450},{"userId":"cpn1ph1p2k122r4a8320","name":"小白","avatar":"https://avatar.moonshot.cn/avatar/cpn1ph1p2k122r4a8310","bio":"勿以善小而不为，勿以恶小而为之","followers":2,"following":1,"likes":52,"url":"https://www.kimi.com/user/cpn1ph1p2k122r4a8320","stickiness":2600},{"userId":"d02frgus1rh47kli4ha0","name":"人形机器人新进展","avatar":"https://avatar.moonshot.cn/avatar/d02frgus1rh47kli4ha0/1745173669625928.png","bio":"","followers":2,"following":0,"likes":13,"url":"https://www.kimi.com/user/d02frgus1rh47kli4ha0","stickiness":650},{"userId":"cuebm681gem7dlp5vh5g","name":"用户9466","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":1,"following":0,"likes":7,"url":"https://www.kimi.com/user/cuebm681gem7dlp5vh5g","stickiness":700},{"userId":"d5r98ums1rh4a6jk8ijg","name":"louis zielinski","avatar":"https://avatar.moonshot.cn/avatar/d5r98ums1rh4a6jk8ijg/1769379239637776.png","bio":"creative solutions expert","followers":1,"following":0,"likes":1,"url":"https://www.kimi.com/user/d5r98ums1rh4a6jk8ijg","stickiness":100},{"userId":"d2nsg9dpa8fvdsejgb2g","name":"催眠神兔","avatar":"https://avatar.moonshot.cn/avatar/default/music_head.png","bio":"铁杆压缩刻录爱好者","followers":1,"following":0,"likes":215,"url":"https://www.kimi.com/user/d2nsg9dpa8fvdsejgb2g","stickiness":21500},{"userId":"cuusrtes1rh6kp4pepcg","name":"用户2154","avatar":"https://avatar.moonshot.cn/avatar/default/inventor_head.png","bio":"","followers":1,"following":0,"likes":18,"url":"https://www.kimi.com/user/cuusrtes1rh6kp4pepcg","stickiness":1800},{"userId":"co0pkmecp7fctgoocjf0","name":"Lizzz","avatar":"https://avatar.moonshot.cn/avatar/co0pkmecp7fctgoocje0","bio":"","followers":1,"following":1,"likes":1,"url":"https://www.kimi.com/user/co0pkmecp7fctgoocjf0","stickiness":100},{"userId":"cqcml4k5r38hfokjg5a0","name":"匿名","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":1,"following":0,"likes":3,"url":"https://www.kimi.com/user/cqcml4k5r38hfokjg5a0","stickiness":300},{"userId":"d7kdd5un3mk3r6r1v020","name":"告白之夜","avatar":"https://avatar.moonshot.cn/avatar/default/hiphop_head.png","bio":"在一个夜黑风高的早上，你在担架旁看到了我，故事开始了","followers":1,"following":0,"likes":2,"url":"https://www.kimi.com/user/d7kdd5un3mk3r6r1v020","stickiness":200},{"userId":"cpqjn8b3aesuho8vm0j0","name":"用户7381","avatar":"https://avatar.moonshot.cn/avatar/cpqjn8b3aesuho8vm0i0/1732598950.jpeg","bio":"","followers":1,"following":0,"likes":1,"url":"https://www.kimi.com/user/cpqjn8b3aesuho8vm0j0","stickiness":100},{"userId":"csibu6fd0p88gtmhdvag","name":"李昂","avatar":"https://avatar.moonshot.cn/avatar/csibu6fd0p88gtmhdv90/1730461465.jpeg","bio":"","followers":1,"following":1,"likes":3,"url":"https://www.kimi.com/user/csibu6fd0p88gtmhdvag","stickiness":300},{"userId":"co0ieeucp7fctgvc0c3g","name":"刘晓光","avatar":"https://avatar.moonshot.cn/avatar/co0ieeucp7fctgvc0c2g","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/co0ieeucp7fctgvc0c3g","stickiness":0},{"userId":"cnubngkudu61k29359q0","name":"蒋鹏","avatar":"https://avatar.moonshot.cn/avatar/cnubngkudu61k29359p0/1720781874.jpeg","bio":"","followers":0,"following":0,"likes":2,"url":"https://www.kimi.com/user/cnubngkudu61k29359q0","stickiness":0},{"userId":"cnlt8m0nsmmh83i0gmhg","name":"灵通，应朝晖","avatar":"https://avatar.moonshot.cn/avatar/default/meditate_head.png","bio":"","followers":0,"following":0,"likes":3,"url":"https://www.kimi.com/user/cnlt8m0nsmmh83i0gmhg","stickiness":0},{"userId":"cpbg6om768j5a4hfps5g","name":"夕拾🌊","avatar":"https://avatar.moonshot.cn/avatar/cpbg6om768j5a4hfps40","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/cpbg6om768j5a4hfps5g","stickiness":0},{"userId":"cpf7aj1p2k122r2fgbc0","name":"赛！","avatar":"https://avatar.moonshot.cn/avatar/cpf7aj1p2k122r2fgbc0/1771064803007686.png","bio":"","followers":0,"following":0,"likes":6,"url":"https://www.kimi.com/user/cpf7aj1p2k122r2fgbc0","stickiness":0},{"userId":"db31314jc3febabmoft0","name":"登月者0470","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/db31314jc3febabmoft0","stickiness":0},{"userId":"cphjc2m768j5a4j0m4a0","name":"Dida","avatar":"https://avatar.moonshot.cn/avatar/cphjc2m768j5a4j0m490","bio":"","followers":0,"following":0,"likes":6,"url":"https://www.kimi.com/user/cphjc2m768j5a4j0m4a0","stickiness":0},{"userId":"cr8oh01kqq4sl8cqvh2g","name":"碧海晴天","avatar":"https://avatar.moonshot.cn/avatar/cr8oh01kqq4sl8cqvh1g/1725008000.jpeg","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/cr8oh01kqq4sl8cqvh2g","stickiness":0},{"userId":"cng9aahkqq4h7p6tepl0","name":"秀出你的思考","avatar":"https://avatar.moonshot.cn/avatar/cng9aahkqq4h7p6tepk0","bio":"旨在提升自我。","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/cng9aahkqq4h7p6tepl0","stickiness":0},{"userId":"cvh82bsbcdro2n79kra0","name":"用户0281","avatar":"https://avatar.moonshot.cn/avatar/default/meditate_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/cvh82bsbcdro2n79kra0","stickiness":0},{"userId":"co9qh2qlnl90b73emqog","name":"登月者7996","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/co9qh2qlnl90b73emqog","stickiness":0},{"userId":"d7ch500l3dc8u376mutg","name":"登月者7153","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d7ch500l3dc8u376mutg","stickiness":0},{"userId":"csguj1l9roqrov01pj4g","name":"用户1653","avatar":"https://avatar.moonshot.cn/avatar/default/inventor_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/csguj1l9roqrov01pj4g","stickiness":0},{"userId":"cuphnk5kfv3u18fmrkfg","name":"用户5216","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":2,"url":"https://www.kimi.com/user/cuphnk5kfv3u18fmrkfg","stickiness":0},{"userId":"d25lg6ef2kqcjf4okqe0","name":"登月者2352","avatar":"https://avatar.moonshot.cn/avatar/default/pet_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d25lg6ef2kqcjf4okqe0","stickiness":0},{"userId":"cnu4vh9kqq4j9ln62oig","name":"用户6307","avatar":"https://avatar.moonshot.cn/avatar/default/meditate_head.png","bio":"","followers":0,"following":0,"likes":15,"url":"https://www.kimi.com/user/cnu4vh9kqq4j9ln62oig","stickiness":0},{"userId":"cqhprh3df0j148ifer8g","name":"王先生","avatar":"https://avatar.moonshot.cn/avatar/cqhprh3df0j148ifer8g/1759872603935356.png","bio":"","followers":0,"following":0,"likes":3,"url":"https://www.kimi.com/user/cqhprh3df0j148ifer8g","stickiness":0},{"userId":"co6vnesudu6f1qkm31o0","name":"匿名","avatar":"https://avatar.moonshot.cn/avatar/default/outdoor_head.png","bio":"","followers":0,"following":0,"likes":5,"url":"https://www.kimi.com/user/co6vnesudu6f1qkm31o0","stickiness":0},{"userId":"curdrkahra02v2bmbhdg","name":"余苏青阳","avatar":"https://avatar.moonshot.cn/avatar/default/philosophy_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/curdrkahra02v2bmbhdg","stickiness":0},{"userId":"csrgo1rn4i2unfpn27gg","name":"kelynn","avatar":"https://avatar.moonshot.cn/avatar/csrgo1rn4i2unfpn27gg/1757819770887160.png","bio":"","followers":0,"following":1,"likes":9,"url":"https://www.kimi.com/user/csrgo1rn4i2unfpn27gg","stickiness":0},{"userId":"crejm0234pe0g3387l7g","name":"长江哥哥","avatar":"https://avatar.moonshot.cn/avatar/crejm0234pe0g3387l7g/1756549291986299.png","bio":"","followers":0,"following":0,"likes":0,"url":"https://www.kimi.com/user/crejm0234pe0g3387l7g","stickiness":0},{"userId":"d1a2qsk6toi7hf2h7eu0","name":"登月者3429","avatar":"https://avatar.moonshot.cn/avatar/default/outdoor_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d1a2qsk6toi7hf2h7eu0","stickiness":0},{"userId":"coj4t5pkqq4u045t5ukg","name":"Sin","avatar":"https://avatar.moonshot.cn/avatar/coj4t5pkqq4u045t5ujg","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/coj4t5pkqq4u045t5ukg","stickiness":0},{"userId":"d4o3t8gh8nji7gtttlmg","name":"禾序","avatar":"https://avatar.moonshot.cn/avatar/d4o3t8gh8nji7gtttlmg/1785481529064420.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d4o3t8gh8nji7gtttlmg","stickiness":0},{"userId":"crln4nmgi3po1ls9p33g","name":"实现理想","avatar":"https://avatar.moonshot.cn/avatar/crln4nmgi3po1ls9p320/1726706270.jpeg","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/crln4nmgi3po1ls9p33g","stickiness":0},{"userId":"cnv4ucmcp7f4smvq0u40","name":"🍋","avatar":"https://avatar.moonshot.cn/avatar/cnv4ucmcp7f4smvq0u30","bio":"","followers":0,"following":0,"likes":2,"url":"https://www.kimi.com/user/cnv4ucmcp7f4smvq0u40","stickiness":0},{"userId":"d0an5j5bf30flai1u1lg","name":"登月者1239","avatar":"https://avatar.moonshot.cn/avatar/default/meditate_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d0an5j5bf30flai1u1lg","stickiness":0},{"userId":"d4e6gee6s4t8dkt7b6i0","name":"登月者7788","avatar":"https://avatar.moonshot.cn/avatar/default/hiphop_head.png","bio":"","followers":0,"following":0,"likes":2,"url":"https://www.kimi.com/user/d4e6gee6s4t8dkt7b6i0","stickiness":0},{"userId":"co2nt2g3r072r88hhrb0","name":"登月者1117","avatar":"https://avatar.moonshot.cn/avatar/default/inventor_head.png","bio":"","followers":0,"following":0,"likes":0,"url":"https://www.kimi.com/user/co2nt2g3r072r88hhrb0","stickiness":0},{"userId":"ct1blpo967u8aa7dm910","name":"生活","avatar":"https://avatar.moonshot.cn/avatar/ct1blpo967u8aa7dm910/1742378818848378.png","bio":"","followers":0,"following":0,"likes":3,"url":"https://www.kimi.com/user/ct1blpo967u8aa7dm910","stickiness":0},{"userId":"d6fojbqm52tckva0ahk0","name":"登月者1423","avatar":"https://avatar.moonshot.cn/avatar/default/physics_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d6fojbqm52tckva0ahk0","stickiness":0},{"userId":"csn1q2p1jfderooddii0","name":"用户1707","avatar":"https://avatar.moonshot.cn/avatar/default/outdoor_head.png","bio":"","followers":0,"following":0,"likes":0,"url":"https://www.kimi.com/user/csn1q2p1jfderooddii0","stickiness":0},{"userId":"d4c5ttn60ra85idisk20","name":"登月者0006","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":4,"url":"https://www.kimi.com/user/d4c5ttn60ra85idisk20","stickiness":0},{"userId":"d357tb2mvdm141ecdd5g","name":"登月者8546","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/d357tb2mvdm141ecdd5g","stickiness":0},{"userId":"ctcjborf4kmlkarm2b80","name":"TOP-📝","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":1,"url":"https://www.kimi.com/user/ctcjborf4kmlkarm2b80","stickiness":0},{"userId":"ctsbeksbcdrvslpmb5b0","name":"用户0318","avatar":"https://avatar.moonshot.cn/avatar/ctsbeksbcdrvslpmb5b0/1784267179306614.png","bio":"","followers":0,"following":0,"likes":3,"url":"https://www.kimi.com/user/ctsbeksbcdrvslpmb5b0","stickiness":0},{"userId":"cubn36fpfah3he5doer0","name":"用户9740","avatar":"https://avatar.moonshot.cn/avatar/default/sociology_head.png","bio":"","followers":0,"following":0,"likes":0,"url":"https://www.kimi.com/user/cubn36fpfah3he5doer0","stickiness":0}]}</script>
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById('kimi-data').textContent);
+  var ROWS = [], N = 0, maxF = 1, maxG = 1, totalF = 0, overallRank = {};
+  var state = { tab:'all', q:'', sort:'default' };
+
+  function applyData(d){
+    DATA = d || {};
+    ROWS = (DATA.bloggers || []).slice();
+    N = ROWS.length;
+    maxF = Math.max.apply(null, ROWS.map(function(r){return r.followers||0;}).concat([1]));
+    maxG = Math.max.apply(null, ROWS.map(function(r){return r.following||0;}).concat([1]));
+    totalF = ROWS.reduce(function(s,r){return s+(r.followers||0);},0);
+    overallRank = {};
+    ROWS.slice().sort(function(a,b){return b.followers-a.followers;}).forEach(function(r,i){ overallRank[r.userId||r.name]=i+1; });
+    renderOverview();
+    renderAll();
+  }
+
+  function fmt(n){
+    n = Number(n)||0;
+    if(n>=100000000) return (n/100000000).toFixed(1).replace(/\.0$/,'')+'亿';
+    if(n>=10000) return (n/10000).toFixed(1).replace(/\.0$/,'')+'万';
+    return n.toLocaleString('zh-CN');
+  }
+  function fmtTime(s){
+    if(!s) return '—';
+    var str = String(s);
+    var d = new Date(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(str) ? str + ':00Z' : str);
+    if(isNaN(d.getTime())) return str.replace('T',' ');
+    return d.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];}); }
+  function firstChar(s){ var t=(s||'?').trim(); return t ? Array.from(t)[0].toUpperCase() : '?'; }
+  function hashHue(seed){ var h=0,s=String(seed||''); for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360; return h; }
+  function avatarHTML(r, cls){
+    cls = cls || 'av';
+    if(r.avatar) return '<div class="'+cls+'"><img src="'+esc(r.avatar)+'" alt="" loading="lazy" onerror="this.parentNode.textContent=\''+esc(firstChar(r.name))+'\'"></div>';
+    var h=hashHue(r.userId||r.name);
+    return '<div class="'+cls+'" style="background:linear-gradient(135deg,hsl('+h+',72%,58%),hsl('+((h+46)%360)+',78%,46%))">'+esc(firstChar(r.name))+'</div>';
+  }
+  function stick(r){ var f=r.followers||0,g=r.following||0,d=f+g; return d? f/d : 0; }
+
+  var TABS = {
+    all:       { filter:function(){return true;},      cmp:function(a,b){return b.followers-a.followers;} },
+    mutual:    { filter:function(r){return r.following>0;}, cmp:function(a,b){return b.following-a.following;} },
+    potential: { filter:function(r){return r.followers>=20 && (r.followers+r.following)>0;}, cmp:function(a,b){return stick(b)-stick(a);} },
+    rising:    { filter:function(r){return r.followers>=50 && r.followers<=500;}, cmp:function(a,b){return b.followers-a.followers;} }
+  };
+
+  function currentList(){
+    var t = TABS[state.tab] || TABS.all;
+    var arr = ROWS.filter(t.filter);
+    if(state.q){
+      var q=state.q.toLowerCase();
+      arr = arr.filter(function(r){ return (r.name||'').toLowerCase().indexOf(q)>=0 || (r.bio||'').toLowerCase().indexOf(q)>=0; });
+    }
+    var cmp = t.cmp;
+    if(state.sort==='followers') cmp=function(a,b){return b.followers-a.followers;};
+    else if(state.sort==='following') cmp=function(a,b){return b.following-a.following;};
+    else if(state.sort==='stickiness') cmp=function(a,b){return stick(b)-stick(a);};
+    else if(state.sort==='name') cmp=function(a,b){return (a.name||'').localeCompare(b.name||'','zh');};
+    return arr.slice().sort(cmp);
+  }
+
+  function renderOverview(){
+    document.getElementById('ov-n').textContent = N;
+    document.getElementById('ov-f').textContent = fmt(totalF);
+    document.getElementById('ov-avg').textContent = fmt(Math.round(totalF/Math.max(N,1)));
+    var top = ROWS.slice().sort(function(a,b){return b.followers-a.followers;})[0];
+    document.getElementById('ov-top').textContent = top ? top.name : '–';
+    document.getElementById('live-text').textContent = '数据已更新 · ' + fmtTime(DATA.updated_at);
+    document.getElementById('ticker-text').textContent =
+      '📢 共收录 ' + N + ' 位博主 · 累计粉丝 ' + fmt(totalF) + ' · 榜首「' + (top?top.name:'') + '」' + fmt(top?top.followers:0) + ' 粉丝 · 数据更新于 ' + fmtTime(DATA.updated_at);
+    document.getElementById('about-time').textContent = fmtTime(DATA.updated_at);
+    document.getElementById('foot-time').textContent = fmtTime(DATA.updated_at);
+    document.getElementById('foot-n').textContent = N;
+    document.getElementById('foot-src').textContent = DATA.source || 'Kimi 社区（发现）';
+  }
+
+  // 领奖台：order 控制站位（2nd/1st/3rd），medals/cls 按名次索引
+  function renderPodium(list){
+    var top3 = list.slice(0,3);
+    var order = [1,0,2];
+    var medals = ['🥇','🥈','🥉'];
+    var cls = ['first','',''];
+    document.getElementById('podium').innerHTML = order.map(function(idx){
+      var r = top3[idx]; if(!r) return '<div class="pod"></div>';
+      return '<div class="pod '+cls[idx]+'" data-id="'+esc(r.userId||r.name)+'">' +
+        '<div class="medal">'+medals[idx]+'</div>' +
+        avatarHTML(r,'pav') +
+        '<div class="pn">'+esc(r.name||'匿名')+'</div>' +
+        '<div class="pf">'+fmt(r.followers)+'</div>' +
+        '<div class="pl">粉丝</div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('podium').style.display = ((state.tab==='about'||state.tab==='terms')||!top3.length) ? 'none' : 'grid';
+  }
+
+  function renderList(list){
+    document.getElementById('list').innerHTML = list.map(function(r,i){
+      var rc = i===0?'g':i===1?'s':i===2?'b':'';
+      var badge = i<3 ? '<span class="bd '+(i===1?'s':i===2?'b':'')+'">TOP'+(i+1)+'</span>' : '';
+      return '<li class="row '+(i<3?'top':'')+'" data-id="'+esc(r.userId||r.name)+'">' +
+        '<div class="rk '+rc+'">'+(i+1)+'</div>' +
+        avatarHTML(r) +
+        '<div class="inf">' +
+          '<div class="nm"><span class="name">'+esc(r.name||'匿名')+'</span>'+badge+'</div>' +
+          (r.bio ? '<div class="bio">'+esc(r.bio)+'</div>' : '<div class="bio" style="opacity:.45">这个人很神秘，什么都没写</div>') +
+          '<div class="ns">' +
+            '<div class="k p"><b>'+fmt(r.followers)+'</b><span>粉丝</span></div>' +
+            '<div class="k"><b>'+fmt(r.following)+'</b><span>关注</span></div>' +
+            '<div class="k"><b>'+(stick(r)*100).toFixed(0)+'%</b><span>粉丝黏性</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="chev">›</div>' +
+        '<div class="ln" style="width:'+(Math.min(r.followers,maxF)/maxF*100).toFixed(1)+'%"></div>' +
+      '</li>';
+    }).join('');
+    document.getElementById('empty').style.display = list.length ? 'none' : 'block';
+  }
+
+  function radarSVG(vals, labels){
+    var cx=125, cy=108, R=76, n=vals.length;
+    function pt(i,ratio){ var a=-Math.PI/2+i*2*Math.PI/n; return [cx+R*ratio*Math.cos(a), cy+R*ratio*Math.sin(a)]; }
+    var grid='';
+    [0.25,0.5,0.75,1].forEach(function(k){
+      var p=[]; for(var i=0;i<n;i++){ var q=pt(i,k); p.push(q[0].toFixed(1)+','+q[1].toFixed(1)); }
+      grid += '<polygon points="'+p.join(' ')+'" fill="none" stroke="rgba(255,255,255,'+(k===1?'.16':'.07')+')" stroke-width="1"/>';
+    });
+    var axes=''; for(var i=0;i<n;i++){ var q=pt(i,1); axes += '<line x1="'+cx+'" y1="'+cy+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'" stroke="rgba(255,255,255,.08)"/>'; }
+    var poly=[]; var dots='';
+    for(var i=0;i<n;i++){ var v=Math.max(.06,Math.min(1,vals[i])); var q=pt(i,v); poly.push(q[0].toFixed(1)+','+q[1].toFixed(1)); dots += '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="2.6" fill="#7ce9ff"/>'; }
+    var texts='';
+    for(var i=0;i<n;i++){ var q2=pt(i,1.22); texts += '<text x="'+q2[0].toFixed(1)+'" y="'+q2[1].toFixed(1)+'" fill="#8b91a8" font-size="10" text-anchor="middle" dominant-baseline="middle">'+esc(labels[i])+'</text>'; }
+    return '<svg class="radar" viewBox="0 0 250 220">'+grid+axes+'<polygon points="'+poly.join(' ')+'" fill="rgba(124,108,255,.28)" stroke="#8f86ff" stroke-width="1.6"/>'+dots+texts+'</svg>';
+  }
+
+  function openDetail(r){
+    var rank = overallRank[r.userId||r.name] || '—';
+    var vals = [(r.followers||0)/maxF, (r.following||0)/maxG, stick(r), 1-(Number(rank)-1)/Math.max(N-1,1)];
+    var labels = ['粉丝规模','关注规模','粉丝黏性','榜单分位'];
+    document.getElementById('sheet-body').innerHTML =
+      '<div class="head">'+avatarHTML(r)+'<div><div class="nm"><span class="name">'+esc(r.name||'匿名')+'</span></div>'+
+      '<div class="bio">'+esc(r.bio||'这个人很神秘，什么都没写')+'</div></div></div>'+
+      '<div class="grid4">'+
+        '<div class="g4"><b>'+fmt(r.followers)+'</b><span>粉丝</span></div>'+
+        '<div class="g4"><b>'+fmt(r.following)+'</b><span>关注</span></div>'+
+        '<div class="g4"><b>'+(stick(r)*100).toFixed(0)+'%</b><span>粉丝黏性</span></div>'+
+        '<div class="g4"><b>#'+rank+'</b><span>总榜排名</span></div>'+
+      '</div>'+
+      '<div class="radar-wrap">'+radarSVG(vals, labels)+'</div>'+
+      '<div class="legend">'+labels.map(function(l){return '<span><i></i>'+l+'</span>';}).join('')+'</div>'+
+      '<div style="margin-top:10px;color:#6b7186;font-size:11.5px;text-align:center">画像由公开指标归一化生成，仅作相对参考。</div>'+
+      '<div class="acts"><button id="copy-id">复制用户 ID</button><button class="pri" id="close-sheet">关闭</button></div>';
+    document.getElementById('modal').classList.add('on');
+    document.getElementById('close-sheet').onclick = closeModal;
+    document.getElementById('copy-id').onclick = function(){
+      var ta=document.createElement('textarea'); ta.value=r.userId||''; document.body.appendChild(ta); ta.select();
+      try{document.execCommand('copy');}catch(e){}
+      document.body.removeChild(ta); this.textContent='已复制 ✓';
+    };
+  }
+  function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+  document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+  document.getElementById('tabs').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    state.tab=b.getAttribute('data-tab');
+    Array.prototype.forEach.call(this.querySelectorAll('button'),function(x){x.classList.toggle('active',x===b);});
+    var isInfo = (state.tab==='about'||state.tab==='terms');
+    document.getElementById('about').style.display = state.tab==='about'?'block':'none';
+    document.getElementById('terms').style.display = state.tab==='terms'?'block':'none';
+    document.getElementById('toolbar').style.display = isInfo?'none':'flex';
+    document.getElementById('list').style.display = isInfo?'none':'flex';
+    document.getElementById('empty').style.display='none';
+    renderAll();
+  });
+  document.getElementById('q').addEventListener('input', function(e){ state.q=e.target.value.trim(); renderList(currentList()); });
+  document.getElementById('sort').addEventListener('change', function(e){ state.sort=e.target.value; renderAll(); });
+  document.getElementById('list').addEventListener('click', function(e){
+    var li=e.target.closest('li.row'); if(!li) return;
+    var r=ROWS.filter(function(x){return (x.userId||x.name)===li.getAttribute('data-id');})[0];
+    if(r) openDetail(r);
+  });
+  document.getElementById('podium').addEventListener('click', function(e){
+    var p=e.target.closest('.pod'); if(!p) return;
+    var r=ROWS.filter(function(x){return (x.userId||x.name)===p.getAttribute('data-id');})[0];
+    if(r) openDetail(r);
+  });
+
+  function renderAll(){
+    if(state.tab==='about'||state.tab==='terms'){ renderPodium([]); return; }
+    var list=currentList();
+    renderPodium(list);
+    renderList(list);
+  }
+
+  // 手动导入的数据优先（存在本机 localStorage）
+  var LOCAL_KEY = 'kimi_rank_manual_data';
+  function loadLocal(){
+    try {
+      var raw = localStorage.getItem(LOCAL_KEY);
+      if (!raw) return null;
+      var j = JSON.parse(raw);
+      return (j && j.bloggers && j.bloggers.length) ? j : null;
+    } catch (e) { return null; }
+  }
+  function saveLocal(j){ try { localStorage.setItem(LOCAL_KEY, JSON.stringify(j)); } catch (e) {} }
+
+  var local = loadLocal();
+  var embeddedT = DATA.updated_at || '';
+  if (local && (!embeddedT || (local.updated_at || '') >= embeddedT)) applyData(local);
+  else applyData(DATA);
+
+  // 导入弹层
+  function openImport(){
+    document.getElementById('import-msg').textContent = '';
+    document.getElementById('import-modal').classList.add('on');
+  }
+  function closeImport(){ document.getElementById('import-modal').classList.remove('on'); }
+  var _ib = document.getElementById('import-btn'); if (_ib) _ib.onclick = openImport;
+  document.getElementById('import-cancel').onclick = closeImport;
+  document.getElementById('import-modal').onclick = function(e){ if (e.target === this) closeImport(); };
+  document.getElementById('import-apply').onclick = function(){
+    var msg = document.getElementById('import-msg');
+    var txt = document.getElementById('import-text').value.trim();
+    if (!txt) { msg.textContent = '请先粘贴 JSON'; return; }
+    try {
+      var j = JSON.parse(txt);
+      var arr = Array.isArray(j) ? j : j.bloggers;
+      if (!Array.isArray(arr) || !arr.length) throw new Error('没有 bloggers 数组');
+      arr = arr.map(function(r){
+        return {
+          name: r.name || '匿名',
+          followers: Number(r.followers) || 0,
+          following: Number(r.following) || 0,
+          likes: Number(r.likes) || 0,
+          bio: r.bio || '',
+          avatar: r.avatar || '',
+          url: r.url || '',
+          userId: r.userId || r.name || ''
+        };
+      });
+      arr.sort(function(a,b){ return b.followers - a.followers; });
+      var out = {
+        updated_at: (!Array.isArray(j) && j.updated_at) ? j.updated_at : new Date().toISOString().slice(0,16),
+        source: 'Kimi 社区（发现）',
+        bloggers: arr
+      };
+      saveLocal(out);
+      applyData(out);
+      msg.textContent = '✅ 已应用 ' + arr.length + ' 位博主';
+      setTimeout(closeImport, 350);
+    } catch (e) {
+      msg.textContent = '❌ 解析失败：' + e.message;
+    }
+  };
+  document.getElementById('import-clear').onclick = function(){
+    try { localStorage.removeItem(LOCAL_KEY); } catch (e) {}
+    applyData(DATA);
+    document.getElementById('import-msg').textContent = '已清除本地数据，恢复内置数据';
+  };
+
+  // ================= 实时同步引擎（页面内直接调用 Kimi 接口）=================
+  var BASE = 'https://www.kimi.com/apiv2/';
+  var AUTH = 'https://auth.kimi.com/api/account.gateway.v1.AuthService/RefreshToken';
+  var H = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'x-msh-platform': 'web',
+    'x-msh-version': '2.1.0',
+    'R-Timezone': 'Asia/Shanghai',
+    'X-Language': 'zh-CN'
+  };
+  var CORE = ['', 'Kimi', 'AI', '提示词', '教程', '工具', '游戏', '绘画', '写作', '编程', '副业', '效率', '学习', '职场', '生活',
+    '设计', 'Agent', '智能体', '网页', '小程序', '文案', '翻译', 'PPT', '数据分析', '代码', '小说', '故事', '音乐', '视频',
+    '科研', '考研', '留学', '面试', '简历', '电商', '自媒体', '公众号', '小红书', '抖音', 'B站', '办公', 'Excel',
+    '法律', '心理', '健身', '美食', '旅行', '摄影', '动画', '3D', '模型', '开源', '产品', '创业', '投资', '理财',
+    '英语', '数学', '物理', '历史', '哲学', '科幻', '二次元', '表情包', '头像', '壁纸', '闲聊', '日常', '分享', '作品'];
+  var K_RT = 'kfr_rt', K_AT = 'kfr_at', K_EXP = 'kfr_exp', K_KW = 'kfr_kw',
+      K_LEARN = 'kfr_learn', K_IDX = 'kfr_idx', K_LAST = 'kfr_last', K_DATA = 'kfr_data';
+  var SYNC_EVERY = 10 * 60 * 1000;
+  var AT = '', EXP = 0, syncing = false, nextAt = Date.now() + SYNC_EVERY;
+
+  function ls(k, v) {
+    try {
+      if (v === undefined) return localStorage.getItem(k);
+      localStorage.setItem(k, v);
+    } catch (e) { return null; }
+  }
+  function setSync(t, ok) {
+    var el = document.getElementById('sync-text');
+    if (el) el.textContent = t;
+    var d = document.getElementById('sync-dot');
+    if (d) { d.className = 'dot' + (ok ? '' : ' off'); }
+  }
+  function deepFind(o, names, d) {
+    d = d || 0;
+    if (d > 6 || o === null || typeof o !== 'object') return null;
+    if (Array.isArray(o)) {
+      for (var i = 0; i < o.length; i++) { var r = deepFind(o[i], names, d + 1); if (r) return r; }
+      return null;
+    }
+    for (var n = 0; n < names.length; n++) {
+      if (typeof o[names[n]] === 'string' && o[names[n]]) return o[names[n]];
+    }
+    for (var k in o) { if (Object.prototype.hasOwnProperty.call(o, k)) { var v = deepFind(o[k], names, d + 1); if (v) return v; } }
+    return null;
+  }
+
+  function refreshToken(retried) {
+    var rt = ls(K_RT);
+    if (!rt) return Promise.reject({ needToken: true });
+    return fetch(AUTH, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ refreshToken: rt })
+    }).then(function (r) {
+      return r.text().then(function (t) { return { ok: r.ok, status: r.status, t: t }; });
+    }).then(function (x) {
+      if (!x.ok) {
+        var nowRt = ls(K_RT);
+        if (!retried && nowRt && nowRt !== rt) return refreshToken(true);
+        throw { needToken: true, status: x.status, msg: '授权已过期（' + x.status + '）' };
+      }
+      var j;
+      try { j = JSON.parse(x.t); } catch (e) { throw { msg: '续期返回格式异常' }; }
+      var at = deepFind(j, ['accessToken', 'access_token']);
+      var nrt = deepFind(j, ['refreshToken', 'refresh_token']);
+      var exp = deepFind(j, ['expiresIn', 'expires_in']);
+      if (!at) throw { msg: '续期响应缺少 accessToken' };
+      AT = at;
+      EXP = Date.now() + (Number(exp) > 0 ? (Number(exp) - 60) * 1000 : 12 * 60 * 1000);
+      ls(K_AT, AT); ls(K_EXP, String(EXP));
+      if (nrt && nrt !== rt) ls(K_RT, nrt);
+      return AT;
+    });
+  }
+  function ensureToken() {
+    if (AT && EXP > Date.now() + 60000) return Promise.resolve(AT);
+    var c = ls(K_AT), ce = Number(ls(K_EXP) || 0);
+    if (c && ce > Date.now() + 60000) { AT = c; EXP = ce; return Promise.resolve(AT); }
+    return refreshToken();
+  }
+  function call(path, body, retried) {
+    return ensureToken().then(function (at) {
+      return fetch(BASE + path, {
+        method: 'POST',
+        headers: Object.assign({}, H, { 'Authorization': 'Bearer ' + at }),
+        body: JSON.stringify(body)
+      }).then(function (r) {
+        if (r.status === 401 && !retried) {
+          AT = ''; EXP = 0; ls(K_AT, ''); ls(K_EXP, '0');
+          return refreshToken().then(function () { return call(path, body, true); });
+        }
+        if (!r.ok) throw { status: r.status };
+        return r.json();
+      });
+    });
+  }
+
+  function pickKw(n) {
+    var cur = Number(ls(K_KW) || 0) % CORE.length;
+    var out = [];
+    for (var i = 0; i < n; i++) out.push(CORE[(cur + i) % CORE.length]);
+    ls(K_KW, String((cur + n) % CORE.length));
+    var learned = [];
+    try { learned = JSON.parse(ls(K_LEARN) || '[]'); } catch (e) {}
+    for (var j = 0; j < learned.length && out.length < n + 4; j++) {
+      if (out.indexOf(learned[j]) < 0) out.push(learned[j]);
+    }
+    return out;
+  }
+  function discover(kws) {
+    var found = {};
+    var chain = Promise.resolve();
+    kws.forEach(function (kw) {
+      chain = chain.then(function () {
+        return call('moment.v1.SearchService/SearchMoments', {
+          query: kw,
+          sessionId: 'kfr-' + Math.random().toString(36).slice(2),
+          _nextPageToken: ''
+        }).then(function (j) {
+          var arr = [].concat((j && j.moments) || [], (j && j.relatedMoments) || []);
+          arr.forEach(function (m) {
+            var mm = (m && m.moment) || m;
+            var a = (mm && mm.author && mm.author.userBase) || (mm && mm.author) || {};
+            var av = (a.avatarImage && a.avatarImage.url) || (typeof a.avatar === 'string' ? a.avatar : '') || '';
+            if (a.userId) found[a.userId] = { userId: a.userId, name: a.name || '匿名', avatar: av };
+            var tags = (m && (m.topic || m.tag)) || '';
+            if (tags && String(tags).length <= 12) {
+              var learned = [];
+              try { learned = JSON.parse(ls(K_LEARN) || '[]'); } catch (e) {}
+              if (learned.indexOf(tags) < 0 && learned.length < 240) { learned.push(tags); ls(K_LEARN, JSON.stringify(learned)); }
+            }
+          });
+        }).catch(function () {});
+      });
+    });
+    return chain.then(function () { return Object.keys(found).map(function (k) { return found[k]; }); });
+  }
+  function mapLimit(items, limit, fn) {
+    var out = new Array(items.length), i = 0;
+    function next() {
+      if (i >= items.length) return Promise.resolve();
+      var k = i++;
+      return Promise.resolve(fn(items[k], k)).then(function (v) { out[k] = v; }).catch(function () {}).then(next);
+    }
+    var ws = [];
+    for (var j = 0; j < Math.min(limit, items.length); j++) ws.push(next());
+    return Promise.all(ws).then(function () { return out; });
+  }
+  function profile(u) {
+    return call('moment.v1.UserService/GetUserProfile', { userId: u.userId }).then(function (j) {
+      var b = (j && j.userBase) || {}, st = (j && j.userStat) || {}, info = (j && j.userInfo) || {};
+      var av = (b.avatarImage && b.avatarImage.url) || (typeof b.avatar === 'string' ? b.avatar : '') || u.avatar || '';
+      return {
+        userId: u.userId,
+        name: b.name || u.name,
+        avatar: av,
+        bio: info.bio || info.description || info.sign || '',
+        followers: Number(st.followerNum || 0),
+        following: Number(st.followingNum || st.followNum || 0),
+        likes: Number(st.momentLikesNum || st.likeNum || 0)
+      };
+    }).catch(function () { return null; });
+  }
+  function merge(fresh) {
+    var cur = {};
+    ROWS.forEach(function (r) { cur[r.userId || r.name] = r; });
+    fresh.forEach(function (f) {
+      if (!f || !f.userId) return;
+      var old = cur[f.userId] || {};
+      cur[f.userId] = {
+        userId: f.userId,
+        name: f.name || old.name || '匿名',
+        avatar: f.avatar || old.avatar || '',
+        bio: f.bio || old.bio || '',
+        followers: f.followers || old.followers || 0,
+        following: f.following || old.following || 0,
+        likes: f.likes || old.likes || 0,
+        url: old.url || ('https://www.kimi.com/user/' + f.userId)
+      };
+    });
+    var arr = Object.keys(cur).map(function (k) { return cur[k]; });
+    arr.forEach(function (r) { r.stickiness = r.followers ? Math.round((r.likes || 0) / r.followers * 1000) / 10 : 0; });
+    arr.sort(function (a, b) { return (b.followers || 0) - (a.followers || 0); });
+    return arr;
+  }
+
+  function liveSync(manual) {
+    if (syncing) return Promise.resolve();
+    if (!ls(K_RT)) { if (manual) showToken(); setSync('未接入实时数据', false); return Promise.resolve(); }
+    syncing = true;
+    setSync('正在同步…', false);
+    return ensureToken()
+      .then(function () {
+        setSync('扫描社区动态…', false);
+        return discover(pickKw(4));
+      })
+      .then(function (list) {
+        var all = ROWS.slice(), seen = {};
+        all.forEach(function (r) { seen[r.userId || r.name] = 1; });
+        list.forEach(function (u) { if (!seen[u.userId]) { all.push(u); seen[u.userId] = 1; } });
+        var start = Number(ls(K_IDX) || 0) % Math.max(all.length, 1);
+        var rot = all.slice(start).concat(all.slice(0, start));
+        var batch = rot.slice(0, 180);
+        ls(K_IDX, String((start + batch.length) % Math.max(all.length, 1)));
+        var done = 0, total = batch.length;
+        setSync('刷新资料 0/' + total, false);
+        return mapLimit(batch, 6, function (u) {
+          return profile(u).then(function (p) {
+            done++;
+            if (done % 10 === 0 || done === total) setSync('刷新资料 ' + done + '/' + total, false);
+            return p;
+          });
+        });
+      })
+      .then(function (fresh) {
+        var arr = merge(fresh);
+        var out = {
+          updated_at: new Date().toISOString().slice(0, 16),
+          source: 'Kimi 社区（发现）',
+          bloggers: arr
+        };
+        ls(K_DATA, JSON.stringify(out));
+        ls(K_LAST, String(Date.now()));
+        applyData(out);
+        setSync('已同步 · ' + arr.length + ' 位博主', true);
+        nextAt = Date.now() + SYNC_EVERY;
+        maybeUpload(arr.length, manual);
+      })
+      .catch(function (e) {
+        if (e && e.needToken) { showToken(); setSync('授权已过期，请重新接入', false); }
+        else setSync('同步失败' + (e && e.status ? '（HTTP ' + e.status + '）' : '') + '，稍后自动重试', false);
+      })
+      .then(function () { syncing = false; });
+  }
+
+  // 授权弹层
+  function showToken() {
+    var m = document.getElementById('token-modal');
+    if (m) m.classList.add('on');
+  }
+  document.getElementById('token-cancel').onclick = function () {
+    document.getElementById('token-modal').classList.remove('on');
+  };
+  document.getElementById('token-connect').onclick = function () {
+    var v = document.getElementById('token-text').value.trim().replace(/^["']|["']$/g, '');
+    var msg = document.getElementById('token-msg');
+    if (!v) { msg.textContent = '请先粘贴 refresh_token'; return; }
+    ls(K_RT, v);
+    ls(K_AT, ''); ls(K_EXP, '0');
+    AT = ''; EXP = 0;
+    msg.textContent = '已保存，正在验证…';
+    refreshToken().then(function () {
+      document.getElementById('token-modal').classList.remove('on');
+      document.getElementById('token-text').value = '';
+      liveSync(true);
+    }).catch(function (e) {
+      msg.textContent = '❌ 验证失败：' + (e && e.msg ? e.msg : 'token 无效');
+      ls(K_RT, '');
+    });
+  };
+  var _sb = document.getElementById('sync-btn'); if (_sb) _sb.onclick = function () { liveSync(true); };
+
+  // 导出「零 token 分享版」：数据内嵌，别人打开直接看
+  function exportShare() {
+    if (!ROWS.length) { setSync('还没有数据可导出', false); return; }
+    var doc = document.documentElement.cloneNode(true);
+    var flag = doc.querySelector('#kfr-share-flag');
+    if (flag) flag.textContent = 'window.__KFR_SHARE__ = true;';
+    var ds = doc.querySelector('#kimi-data');
+    if (ds) ds.textContent = JSON.stringify({
+      updated_at: DATA.updated_at,
+      source: DATA.source || 'Kimi 社区（发现）',
+      bloggers: ROWS
+    });
+    ['list','podium','sheet-body','ticker-text','ov-n','ov-f','ov-avg','ov-top',
+     'live-text','sync-text','sync-next','about-time','foot-time','foot-n','foot-src']
+      .forEach(function (id) { var e = doc.querySelector('#' + id); if (e) e.innerHTML = ''; });
+    var sb = doc.querySelector('#syncbar'); if (sb) sb.parentNode.removeChild(sb);
+    var ib = doc.querySelector('#import-btn'); if (ib) ib.parentNode.removeChild(ib);
+    var html = '<!DOCTYPE html>\n' + doc.outerHTML;
+    var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kimi-rank-' + String(DATA.updated_at || '').slice(0, 10) + '.html';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    setSync('已生成分享版，打开即可发给别人', true);
+  }
+  var _shbx = document.getElementById('share-btn'); if (_shbx) _shbx.onclick = exportShare;
+
+  // ===== 云端同步：自动把 data.json 推到 GitHub =====
+  var GH_REPO = 'kfr_repo', GH_PAT = 'kfr_pat', GH_LAST = 'kfr_gh_last';
+  function b64(str) {
+    var bytes = new TextEncoder().encode(str), bin = '';
+    for (var i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(bin);
+  }
+  function ghPut(repo, pat, json) {
+    var url = 'https://api.github.com/repos/' + repo + '/contents/data.json';
+    var head = { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github+json' };
+    return fetch(url, { headers: head }).then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (info) {
+      var body = { message: 'update ' + (json.updated_at || ''), content: b64(JSON.stringify(json)) };
+      if (info && info.sha) body.sha = info.sha;
+      return fetch(url, {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, head),
+        body: JSON.stringify(body)
+      });
+    });
+  }
+  function maybeUpload(n, force) {
+    var repo = ls(GH_REPO), pat = ls(GH_PAT);
+    if (!repo || !pat) return;
+    if (!force && Date.now() - Number(ls(GH_LAST) || 0) < 55 * 60 * 1000) return;
+    ghPut(repo, pat, {
+      updated_at: DATA.updated_at,
+      source: DATA.source || 'Kimi 社区（发现）',
+      bloggers: ROWS
+    }).then(function (r) {
+      if (r && r.ok) {
+        ls(GH_LAST, String(Date.now()));
+        setSync('已同步并上传云端 · ' + n + ' 位博主', true);
+      } else if (r && (r.status === 401 || r.status === 403 || r.status === 404)) {
+        setSync('云端上传失败（' + r.status + '），请检查令牌', false);
+      }
+    }).catch(function () {});
+  }
+  function showCloud() {
+    document.getElementById('cloud-repo').value = ls(GH_REPO) || '';
+    document.getElementById('cloud-pat').value = ls(GH_PAT) || '';
+    document.getElementById('cloud-msg').textContent = '';
+    document.getElementById('cloud-modal').classList.add('on');
+  }
+  var _cb = document.getElementById('cloud-btn'); if (_cb) _cb.onclick = showCloud;
+  var _cc = document.getElementById('cloud-cancel'); if (_cc) _cc.onclick = function () {
+    document.getElementById('cloud-modal').classList.remove('on');
+  };
+  var _co = document.getElementById('cloud-off'); if (_co) _co.onclick = function () {
+    ls(GH_REPO, ''); ls(GH_PAT, ''); ls(GH_LAST, '0');
+    document.getElementById('cloud-msg').textContent = '已关闭云端同步';
+  };
+  var _cs = document.getElementById('cloud-save'); if (_cs) _cs.onclick = function () {
+    var repo = document.getElementById('cloud-repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, '');
+    var pat = document.getElementById('cloud-pat').value.trim();
+    var msg = document.getElementById('cloud-msg');
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { msg.textContent = '仓库格式应为 用户名/仓库名'; return; }
+    if (!pat) { msg.textContent = '请填访问令牌'; return; }
+    msg.textContent = '正在测试…';
+    ghPut(repo, pat, {
+      updated_at: DATA.updated_at,
+      source: DATA.source || 'Kimi 社区（发现）',
+      bloggers: ROWS
+    }).then(function (r) {
+      if (!r) { msg.textContent = '❌ 网络不通，稍后再试'; return; }
+      if (r.ok) {
+        ls(GH_REPO, repo); ls(GH_PAT, pat); ls(GH_LAST, String(Date.now()));
+        msg.textContent = '✅ 上传成功，云端已可访问';
+        setTimeout(function () { document.getElementById('cloud-modal').classList.remove('on'); }, 800);
+      } else if (r.status === 401) {
+        msg.textContent = '❌ 令牌无效或已过期';
+      } else if (r.status === 404) {
+        msg.textContent = '❌ 仓库不存在，或令牌没有 Contents 权限';
+      } else {
+        msg.textContent = '❌ 失败（HTTP ' + r.status + '）';
+      }
+    }).catch(function () { msg.textContent = '❌ 网络异常'; });
+  };
+  var _st = document.getElementById('sync-text'); if (_st) _st.onclick = function () {
+    if (!ls(K_RT)) showToken();
+  };
+
+  // 倒计时
+  setInterval(function () {
+    var el = document.getElementById('sync-next');
+    if (!el) return;
+    if (!ls(K_RT)) { el.textContent = ''; return; }
+    if (syncing) { el.textContent = ''; return; }
+    var left = Math.max(0, nextAt - Date.now());
+    var m = Math.floor(left / 60000), sec = Math.floor(left % 60000 / 1000);
+    el.textContent = '下次自动刷新 ' + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }, 1000);
+
+  // 定时 + 回前台触发
+  setInterval(function () {
+    if (!document.hidden && Date.now() >= nextAt) liveSync();
+  }, 20000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && Date.now() - Number(ls(K_LAST) || 0) > 5 * 60 * 1000) liveSync();
+  });
+
+  // 启动：优先本地缓存，其次内置快照；有 token 就立刻同步
+  (function boot() {
+    if (window.__KFR_SHARE__) {
+      applyData(DATA);
+      var sb = document.getElementById('syncbar'); if (sb) sb.style.display = 'none';
+      var ib = document.getElementById('import-btn'); if (ib) ib.style.display = 'none';
+      // 部署到固定网址后：自动读取同目录 data.json，永远显示最新
+      function grab(url) {
+        return fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+      }
+      function pullStatic() {
+        grab('./data.json?_=' + Date.now())
+          .then(function (j) { return j || grab('./data.json'); })
+          .then(function (j) {
+            if (!j || !j.bloggers || !j.bloggers.length) return;
+            if (j.updated_at && (!DATA.updated_at || j.updated_at > DATA.updated_at)) {
+              applyData(j);
+              ls(K_DATA, JSON.stringify(j));
+            }
+          })
+          .catch(function () {});
+      }
+      setTimeout(pullStatic, 600);
+      setInterval(function () { if (!document.hidden) pullStatic(); }, 5 * 60 * 1000);
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) pullStatic(); });
+      return;
+    }
+    var cached = null;
+    try { cached = JSON.parse(ls(K_DATA) || 'null'); } catch (e) {}
+    if (cached && cached.bloggers && cached.bloggers.length) applyData(cached);
+    if (ls(K_RT)) {
+      setSync('准备同步…', false);
+      setTimeout(function () { liveSync(); }, 1200);
+    } else {
+      setSync('未接入实时数据 · 点此接入', false);
+    }
+  })();
+})();
+</script>
+
+
+</body></html>
