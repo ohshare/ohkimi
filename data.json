@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T19:36",
+  "updated_at": "2026-10-24T19:52",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -3441,6 +3441,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/d78t205gsoa1c9g3fkb0/1778840164383015.jpg",
       "url": "",
       "userId": "d78t205gsoa1c9g3fkb0"
+    },
+    {
+      "name": "登月者5089",
+      "followers": 51,
+      "following": 2,
+      "likes": 256,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/d199pkcupvnpmv6npn3g/1750335568013307.jpg",
+      "url": "",
+      "userId": "d199pkcupvnpmv6npn3g"
     },
     {
       "name": "NEO",
@@ -7463,6 +7473,16 @@
       "userId": "da2ir74pm1t84j6at210"
     },
     {
+      "name": "凌云",
+      "followers": 1,
+      "following": 0,
+      "likes": 8,
+      "bio": "识趣，爱生活",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/philosophy_head.png",
+      "url": "",
+      "userId": "d372m8qmvdmd77vamsmg"
+    },
+    {
       "name": "刘晓光",
       "followers": 0,
       "following": 0,
@@ -10551,6 +10571,16 @@
       "avatar": "",
       "url": "",
       "userId": "d6cmnjhtoomdk5if372g"
+    },
+    {
+      "name": "登月者2545",
+      "followers": 0,
+      "following": 0,
+      "likes": 0,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/inventor_head.png",
+      "url": "",
+      "userId": "d7ui2ulgsoa7ildk7ncg"
     }
   ]
 }
