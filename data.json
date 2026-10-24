@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T17:33",
+  "updated_at": "2026-10-24T17:54",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -166,7 +166,7 @@
       "name": "财神爷",
       "followers": 1014,
       "following": 747,
-      "likes": 20824,
+      "likes": 20825,
       "bio": "财神爷工作室最严肃的室长，师傅：夜行观星",
       "avatar": "https://avatar.moonshot.cn/avatar/d2ihd3gc86s8s00v1380/1787230197490273.jpg",
       "url": "",
@@ -236,7 +236,7 @@
       "name": "银色子弹-Silver",
       "followers": 826,
       "following": 122,
-      "likes": 4103,
+      "likes": 4104,
       "bio": "B站账号同名同头像",
       "avatar": "https://avatar.moonshot.cn/avatar/cqgrjao04rj5plplu68g/1786593423727747.png",
       "url": "",
@@ -406,7 +406,7 @@
       "name": "9876",
       "followers": 637,
       "following": 681,
-      "likes": 1432,
+      "likes": 1433,
       "bio": "主攻太阳系探索系统、脱逃者，和神经网络",
       "avatar": "https://avatar.moonshot.cn/avatar/cusp6q737oq7ooahi0u0/1784178108923539.png",
       "url": "",
@@ -634,7 +634,7 @@
     },
     {
       "name": "𝓕𝓻𝓮𝔂𝓪",
-      "followers": 419,
+      "followers": 420,
       "following": 50,
       "likes": 4578,
       "bio": "莲渡工作室室长 淡网",
@@ -803,6 +803,16 @@
       "userId": "cusq2p7ahd86nrrnej80"
     },
     {
+      "name": "止’",
+      "followers": 355,
+      "following": 459,
+      "likes": 11823,
+      "bio": "🌊💦🌊💦🌊💦🌊💦🌊💦🌊💦🌊💦🌊💦🌊💦🌊💦",
+      "avatar": "https://avatar.moonshot.cn/avatar/dads54iej2dg968mhct0/1792823132280857.png",
+      "url": "",
+      "userId": "dads54iej2dg968mhct0"
+    },
+    {
       "name": "赌神星汐（薪夕）",
       "followers": 348,
       "following": 454,
@@ -914,13 +924,23 @@
     },
     {
       "name": "用户7230",
-      "followers": 306,
+      "followers": 307,
       "following": 326,
       "likes": 1973,
       "bio": "这个人很懒，什么也没留（前面一段是我亲自打的）",
       "avatar": "https://avatar.moonshot.cn/avatar/cthbsqmahlmcrcou74ng/1773229020157467.png",
       "url": "",
       "userId": "cthbsqmahlmcrcou74ng"
+    },
+    {
+      "name": "苏奈玖",
+      "followers": 304,
+      "following": 40,
+      "likes": 515,
+      "bio": "词元长存不息，想法转瞬即逝",
+      "avatar": "https://avatar.moonshot.cn/avatar/d1g9rdtf8r30qa51ifdg/1787923674917053.jpg",
+      "url": "",
+      "userId": "d1g9rdtf8r30qa51ifdg"
     },
     {
       "name": "沧海一声笑",
@@ -1063,6 +1083,16 @@
       "userId": "d45kbra783mkn8ohbao0"
     },
     {
+      "name": "杰座-𝓳𝓳𝓩𝓩",
+      "followers": 270,
+      "following": 347,
+      "likes": 1517,
+      "bio": "六年级，男",
+      "avatar": "https://avatar.moonshot.cn/avatar/cs4a8m9a5845iosqpqh0/1792861649064461.png",
+      "url": "",
+      "userId": "cs4a8m9a5845iosqpqh0"
+    },
+    {
       "name": "雷霆南兰",
       "followers": 269,
       "following": 322,
@@ -1076,7 +1106,7 @@
       "name": "豆包万岁(苹小果)",
       "followers": 268,
       "following": 8,
-      "likes": 2206,
+      "likes": 2207,
       "bio": "我猜你在看他的介绍  徒:哈基盾  收徒中",
       "avatar": "https://avatar.moonshot.cn/avatar/ctqas2ol3dc7n791s800/1791000762389647.png",
       "url": "",
@@ -1156,7 +1186,7 @@
       "name": "ZX.无.静",
       "followers": 248,
       "following": 313,
-      "likes": 2806,
+      "likes": 2810,
       "bio": "写刀子是我的业务",
       "avatar": "https://avatar.moonshot.cn/avatar/cv1gn91rqpmf7h43s3cg/1792505790641512.jpg",
       "url": "",
@@ -1676,7 +1706,7 @@
       "name": "𝓫𝓪𝓭𝓬𝓪𝓽",
       "followers": 166,
       "following": 9,
-      "likes": 882,
+      "likes": 883,
       "bio": "10.19-10.31(活猫微死…)",
       "avatar": "https://avatar.moonshot.cn/avatar/dasvmm33kdlureknepg0/1790573632345200.png",
       "url": "",
@@ -1721,6 +1751,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/philosophy_head.png",
       "url": "",
       "userId": "cukv8sl3v89qtnpfrurg"
+    },
+    {
+      "name": "Android Studio_17",
+      "followers": 161,
+      "following": 102,
+      "likes": 1962,
+      "bio": "mount -o rw,remount /system",
+      "avatar": "https://avatar.moonshot.cn/avatar/ctebqr8nsmmslf7ejkdg/1791700242291742.png",
+      "url": "",
+      "userId": "ctebqr8nsmmslf7ejkdg"
     },
     {
       "name": "陆青",
@@ -2046,7 +2086,7 @@
       "name": "苦楚轶事",
       "followers": 133,
       "following": 48,
-      "likes": 1509,
+      "likes": 1510,
       "bio": "蒸发态工作室，苦痛伴随我走过太多，便在黑夜里点起油灯",
       "avatar": "https://avatar.moonshot.cn/avatar/d9ilhabmrb73tdaqh13g/1792419293300817.png",
       "url": "",
@@ -2293,6 +2333,16 @@
       "userId": "cvvkc64bcdrpcmds7810"
     },
     {
+      "name": "小猫毁灭地球",
+      "followers": 111,
+      "following": 27,
+      "likes": 927,
+      "bio": "地球小心我找一车面包人来弄你🌏💥（不回关）",
+      "avatar": "https://avatar.moonshot.cn/avatar/cvgelacbcdro2n379800/1783169666199064.jpg",
+      "url": "",
+      "userId": "cvgelacbcdro2n379800"
+    },
+    {
       "name": "我没招了",
       "followers": 110,
       "following": 28,
@@ -2321,16 +2371,6 @@
       "avatar": "https://avatar.moonshot.cn/avatar/cum8fsn6o68jmt8ulk90/1791982097411920.png",
       "url": "",
       "userId": "cum8fsn6o68jmt8ulk90"
-    },
-    {
-      "name": "小猫毁灭地球",
-      "followers": 110,
-      "following": 27,
-      "likes": 926,
-      "bio": "地球小心我找一车面包人来弄你🌏💥（不回关）",
-      "avatar": "https://avatar.moonshot.cn/avatar/cvgelacbcdro2n379800/1783169666199064.jpg",
-      "url": "",
-      "userId": "cvgelacbcdro2n379800"
     },
     {
       "name": "51718512285365681451",
@@ -2713,6 +2753,16 @@
       "userId": "cskb9l234pe87tf6l3jg"
     },
     {
+      "name": "Wies X.Aly",
+      "followers": 85,
+      "following": 49,
+      "likes": 406,
+      "bio": "何度も……",
+      "avatar": "https://avatar.moonshot.cn/avatar/d6246iim52tc034iuumg/1787827282803361.png",
+      "url": "",
+      "userId": "d6246iim52tc034iuumg"
+    },
+    {
       "name": "博物Book",
       "followers": 84,
       "following": 0,
@@ -2893,6 +2943,16 @@
       "userId": "ct2ravuakqcpv7reeq5g"
     },
     {
+      "name": "老大⁸ₓ",
+      "followers": 73,
+      "following": 4,
+      "likes": 485,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/cv1bcc9rqpmf7h186560/1790851137003661.png",
+      "url": "",
+      "userId": "cv1bcc9rqpmf7h186560"
+    },
+    {
       "name": "RAY HOLLY",
       "followers": 71,
       "following": 89,
@@ -2981,6 +3041,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/cuf39i2av1f3eq5888j0/1746424789169042.png",
       "url": "",
       "userId": "cuf39i2av1f3eq5888j0"
+    },
+    {
+      "name": "WOW",
+      "followers": 66,
+      "following": 24,
+      "likes": 338,
+      "bio": "（支持猫箱、 Kimi、豆包多平台创作。）",
+      "avatar": "https://avatar.moonshot.cn/avatar/d3p39khtoom0gl0cauqg/1790470892527171.png",
+      "url": "",
+      "userId": "d3p39khtoom0gl0cauqg"
     },
     {
       "name": "o巴级大狂风o",
@@ -3373,6 +3443,16 @@
       "userId": "d06e4u0c86s0kia7e200"
     },
     {
+      "name": "Ferrari ENZO（走遍kimi）",
+      "followers": 49,
+      "following": 54,
+      "likes": 348,
+      "bio": "车迷、小比例模型（1:64）收藏者，爱风火轮、多美卡…等64比例品牌。",
+      "avatar": "https://avatar.moonshot.cn/avatar/d95ln2sqdqejcoca45p0/1790243617506925.jpg",
+      "url": "",
+      "userId": "d95ln2sqdqejcoca45p0"
+    },
+    {
       "name": "用户1527",
       "followers": 48,
       "following": 66,
@@ -3441,6 +3521,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/d9ljvj8u8ld7lc7chi5g/1786796468115179.png",
       "url": "",
       "userId": "d9ljvj8u8ld7lc7chi5g"
+    },
+    {
+      "name": "小记者电脑",
+      "followers": 46,
+      "following": 63,
+      "likes": 35,
+      "bio": "小学生创作",
+      "avatar": "https://avatar.moonshot.cn/avatar/cug4nhvpfah3he6h6pcg/1771642367309392.png",
+      "url": "",
+      "userId": "cug4nhvpfah3he6h6pcg"
     },
     {
       "name": "闲云潭影",
@@ -5133,6 +5223,16 @@
       "userId": "cuhfg281gem7dlv3g5mg"
     },
     {
+      "name": "花卷HJ",
+      "followers": 11,
+      "following": 14,
+      "likes": 1,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/css9q6jmvq8kgakke1cg/1787057156433286.jpg",
+      "url": "",
+      "userId": "css9q6jmvq8kgakke1cg"
+    },
+    {
       "name": "LordRabbit_3",
       "followers": 10,
       "following": 2,
@@ -6233,6 +6333,16 @@
       "userId": "cqqupt2lnl9644fenbi0"
     },
     {
+      "name": "登月者2657",
+      "followers": 3,
+      "following": 2,
+      "likes": 16,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/sociology_head.png",
+      "url": "",
+      "userId": "d5sc0b2m52t4fe76s4u0"
+    },
+    {
       "name": "එඩිට් පොඩ්ඩා",
       "followers": 2,
       "following": 0,
@@ -7311,6 +7421,26 @@
       "avatar": "https://avatar.moonshot.cn/avatar/d1j7n976o68thg0pkvb0/1786805352625251.png",
       "url": "",
       "userId": "d1j7n976o68thg0pkvb0"
+    },
+    {
+      "name": "菲梦",
+      "followers": 1,
+      "following": 0,
+      "likes": 0,
+      "bio": "女生",
+      "avatar": "https://avatar.moonshot.cn/avatar/cteknqp0522kvb4c0k8g/1744448040789542.png",
+      "url": "",
+      "userId": "cteknqp0522kvb4c0k8g"
+    },
+    {
+      "name": "没完没了",
+      "followers": 1,
+      "following": 0,
+      "likes": 1,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/music_head.png",
+      "url": "",
+      "userId": "da2ir74pm1t84j6at210"
     },
     {
       "name": "刘晓光",
@@ -10371,6 +10501,26 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/outdoor_head.png",
       "url": "",
       "userId": "cskn73p4g0lc9su3tabg"
+    },
+    {
+      "name": "登月者7181",
+      "followers": 0,
+      "following": 0,
+      "likes": 1,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/outdoor_head.png",
+      "url": "",
+      "userId": "d9nudrasc5ci4019rlvg"
+    },
+    {
+      "name": "余辛未",
+      "followers": 0,
+      "following": 0,
+      "likes": 0,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/cn8pi9kudu69apktn34g",
+      "url": "",
+      "userId": "cn8pi9kudu69apktn35g"
     }
   ]
 }
