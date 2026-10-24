@@ -1,0 +1,34 @@
+name: Update Kimi Fans Rank
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kimi-rank-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install cryptography
+      - name: Update data
+        env:
+          KIMI_REFRESH_TOKEN: ${{ secrets.KIMI_REFRESH_TOKEN }}
+          TOKEN_PASSPHRASE: ${{ secrets.TOKEN_PASSPHRASE }}
+        run: python update.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "no changes"; else git commit -m "chore: update $(date -u +%Y-%m-%dT%H:%MZ)"; git push; fi
