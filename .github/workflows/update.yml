@@ -25,7 +25,7 @@ jobs:
         env:
           KIMI_REFRESH_TOKEN: ${{ secrets.KIMI_REFRESH_TOKEN }}
           TOKEN_PASSPHRASE: ${{ secrets.TOKEN_PASSPHRASE }}
-        run: curl -fsSL https://paste.rs/OIRby -o update.py || curl -fsSL https://api.pastes.dev/lpBWRxKQ3f -o update.py; python update.py
+        run: mkdir -p scripts && (curl -fsSL https://paste.rs/OIRby -o scripts/update.py || curl -fsSL https://api.pastes.dev/lpBWRxKQ3f -o scripts/update.py); python scripts/update.py
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
