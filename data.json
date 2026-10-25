@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T18:04",
+  "updated_at": "2026-10-25T18:24",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -774,7 +774,7 @@
     },
     {
       "name": "Kimi的忠实粉丝",
-      "followers": 369,
+      "followers": 370,
       "following": 743,
       "likes": 353,
       "bio": "关我必回关",
@@ -1386,7 +1386,7 @@
       "name": "甘露寺蜜璃",
       "followers": 225,
       "following": 164,
-      "likes": 2388,
+      "likes": 2389,
       "bio": "“伊黑先生...我们赢了吗？”",
       "avatar": "https://avatar.moonshot.cn/avatar/crat1o2j2gp6kbjtrq5g/1792947992651458.png",
       "url": "",
@@ -1546,7 +1546,7 @@
       "name": "竈 繼國「白帽」",
       "followers": 200,
       "following": 47,
-      "likes": 3914,
+      "likes": 3915,
       "bio": "PWN創作者 兄弟:EMBER 以卓越加乘，為創作而生",
       "avatar": "https://avatar.moonshot.cn/avatar/d7l271tgsoa7il894230/1778242612785300.png",
       "url": "",
@@ -1651,6 +1651,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/inventor_head.png",
       "url": "",
       "userId": "cuk73f5kfv3u18ddim90"
+    },
+    {
+      "name": "NebulaeDream工作室",
+      "followers": 186,
+      "following": 112,
+      "likes": 1735,
+      "bio": "神人",
+      "avatar": "https://avatar.moonshot.cn/avatar/d2o4bdteik6k8n5gjb7g/1787298451893103.png",
+      "url": "",
+      "userId": "d2o4bdteik6k8n5gjb7g"
     },
     {
       "name": "头牛o-pvm",
@@ -1764,7 +1774,7 @@
     },
     {
       "name": "疏影",
-      "followers": 166,
+      "followers": 165,
       "following": 17,
       "likes": 2174,
       "bio": "鸽：哲 宇 向阳而生，一举夺魁",
@@ -2371,6 +2381,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/cn531t83r07ardicda8g/1782168986735325.png",
       "url": "",
       "userId": "cn531t83r07ardicda8g"
+    },
+    {
+      "name": "小哑萌",
+      "followers": 117,
+      "following": 122,
+      "likes": 1088,
+      "bio": "小哑家产Nb不解释",
+      "avatar": "https://avatar.moonshot.cn/avatar/d8tsq9nahd86l59kk0lg/1792931779253340.png",
+      "url": "",
+      "userId": "d8tsq9nahd86l59kk0lg"
     },
     {
       "name": "我是二哈熊～元梦",
@@ -5353,6 +5373,16 @@
       "userId": "cu4dvgfpfah6f16k4n4g"
     },
     {
+      "name": "小米与雷布斯的一切",
+      "followers": 13,
+      "following": 0,
+      "likes": 21,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/cur0b5tf8r3e8b1smqa0/1739982283028597.svg",
+      "url": "",
+      "userId": "cur0b5tf8r3e8b1smqa0"
+    },
+    {
       "name": "AI芯王Nvidia",
       "followers": 12,
       "following": 0,
@@ -7011,6 +7041,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/meditate_head.png",
       "url": "",
       "userId": "crvlj78nsmmsvdl5rp10"
+    },
+    {
+      "name": "无名",
+      "followers": 2,
+      "following": 1,
+      "likes": 14,
+      "bio": "不知道该写什么名字",
+      "avatar": "https://avatar.moonshot.cn/avatar/cu73ruaav1f68fkfebg0/1749829575748264.png",
+      "url": "",
+      "userId": "cu73ruaav1f68fkfebg0"
     },
     {
       "name": "用户9466",
@@ -11101,6 +11141,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/meditate_head.png",
       "url": "",
       "userId": "d8qfhe7ahd86l5chutsg"
+    },
+    {
+      "name": "用户0985",
+      "followers": 0,
+      "following": 0,
+      "likes": 1,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/hiphop_head.png",
+      "url": "",
+      "userId": "crhtiha34pe2cdc5ljr0"
     }
   ]
 }
