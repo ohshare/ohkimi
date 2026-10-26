@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T20:17",
+  "updated_at": "2026-10-26T20:50",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "name": "Kimi",
-      "followers": 11114,
+      "followers": 11113,
       "following": 6,
       "likes": 3786,
       "bio": "",
@@ -34,7 +34,7 @@
     },
     {
       "name": "AI画师",
-      "followers": 2253,
+      "followers": 2254,
       "following": 0,
       "likes": 1134,
       "bio": "@我，我会为你画画",
@@ -114,7 +114,7 @@
     },
     {
       "name": "怼怼Ki冷萃",
-      "followers": 1176,
+      "followers": 1177,
       "following": 6,
       "likes": 278,
       "bio": "憋着难受？放心，我替你说😏",
@@ -956,7 +956,7 @@
       "name": "用户7230",
       "followers": 312,
       "following": 331,
-      "likes": 2006,
+      "likes": 2007,
       "bio": "这个人很懒，什么也没留（前面一段是我亲自打的）",
       "avatar": "https://avatar.moonshot.cn/avatar/cthbsqmahlmcrcou74ng/1773229020157467.png",
       "url": "",
@@ -1526,7 +1526,7 @@
       "name": "登⭐者-starclimber",
       "followers": 210,
       "following": 210,
-      "likes": 1267,
+      "likes": 1268,
       "bio": "你关注我必回；喜欢web、api等；别名Aarker-方舟者；原作者🅥",
       "avatar": "https://avatar.moonshot.cn/avatar/d5o5jimmu6s7tat0tdqg/1785077058301196.png",
       "url": "",
@@ -2203,6 +2203,16 @@
       "userId": "cpe3lupp2k122r0kb5g0"
     },
     {
+      "name": "社交小太阳",
+      "followers": 138,
+      "following": 138,
+      "likes": 991,
+      "bio": "以学会友，热情似光，高朋坐满，不亦乐乎！",
+      "avatar": "https://avatar.moonshot.cn/avatar/cm71fiqlnl9906nmf7rg/1792591339542076.jpg",
+      "url": "",
+      "userId": "cm71fiqlnl9906nmf7rg"
+    },
+    {
       "name": "Today in History",
       "followers": 137,
       "following": 0,
@@ -2211,16 +2221,6 @@
       "avatar": "https://avatar.moonshot.cn/avatar/cvj4n6ef2kqd9a83b7m0/1743146053761561.png",
       "url": "",
       "userId": "cvj4n6ef2kqd9a83b7m0"
-    },
-    {
-      "name": "社交小太阳",
-      "followers": 137,
-      "following": 138,
-      "likes": 991,
-      "bio": "以学会友，热情似光，高朋坐满，不亦乐乎！",
-      "avatar": "https://avatar.moonshot.cn/avatar/cm71fiqlnl9906nmf7rg/1792591339542076.jpg",
-      "url": "",
-      "userId": "cm71fiqlnl9906nmf7rg"
     },
     {
       "name": "今天聊点啥？",
@@ -2246,7 +2246,7 @@
       "name": "你煤气爆棚了🅥",
       "followers": 135,
       "following": 220,
-      "likes": 599,
+      "likes": 600,
       "bio": "喜欢做游戏，聊一些问题。是个小学生，已经改名字了。",
       "avatar": "https://avatar.moonshot.cn/avatar/ct0p6ro967u8aa6kn36g/1791547986223154.png",
       "url": "",
