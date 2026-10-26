@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T20:50",
+  "updated_at": "2026-10-26T21:19",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -126,7 +126,7 @@
       "name": "🌈一起fāxiàn发现",
       "followers": 1159,
       "following": 4035,
-      "likes": 3596,
+      "likes": 3597,
       "bio": "潮玩世界🏃🏃🏃永不停歇",
       "avatar": "https://avatar.moonshot.cn/avatar/d9f2akl22qd2lamsmqu0/1788844815062138.png",
       "url": "",
@@ -336,7 +336,7 @@
       "name": "广南省太守",
       "followers": 706,
       "following": 615,
-      "likes": 33878,
+      "likes": 33879,
       "bio": "山回路转不见君，地上空留石楼梯（我是男的）",
       "avatar": "https://avatar.moonshot.cn/avatar/cua8l81g6i8s4nc6gjog/1772950132700741.png",
       "url": "",
@@ -466,7 +466,7 @@
       "name": "星火不灭",
       "followers": 612,
       "following": 810,
-      "likes": 874,
+      "likes": 876,
       "bio": "讲马哲（入门级别），传理想，守本心",
       "avatar": "https://avatar.moonshot.cn/avatar/d53uf5c268gq6cn4nsg0/1784288418698595.jpg",
       "url": "",
@@ -1203,6 +1203,16 @@
       "userId": "cv1dcrvahd89opl41mq0"
     },
     {
+      "name": "梦老板",
+      "followers": 255,
+      "following": 298,
+      "likes": 5367,
+      "bio": "我推天官赐福",
+      "avatar": "https://avatar.moonshot.cn/avatar/d5iaid5f8r3db24riqb0/1780872415022675.png",
+      "url": "",
+      "userId": "d5iaid5f8r3db24riqb0"
+    },
+    {
       "name": "污㾗墨迹",
       "followers": 254,
       "following": 91,
@@ -1776,7 +1786,7 @@
       "name": "𝓫𝓪𝓭𝓬𝓪𝓽",
       "followers": 179,
       "following": 10,
-      "likes": 968,
+      "likes": 969,
       "bio": "(活猫微死…)各位，下次见",
       "avatar": "https://avatar.moonshot.cn/avatar/dasvmm33kdlureknepg0/1790573632345200.png",
       "url": "",
@@ -2806,7 +2816,7 @@
       "name": "滚。",
       "followers": 97,
       "following": 127,
-      "likes": 1600,
+      "likes": 1601,
       "bio": "可互关…🫠丨混Pepoyo丨最爱高山流水xw丨Yande厨+pyy厨。！",
       "avatar": "https://avatar.moonshot.cn/avatar/d5sp1lm00qr11ins37r0/1791378511603606.png",
       "url": "",
@@ -11531,6 +11541,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/music_head.png",
       "url": "",
       "userId": "ctejb4rf4kmlkaurpe7g"
+    },
+    {
+      "name": "用户2211",
+      "followers": 0,
+      "following": 0,
+      "likes": 2,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/meditate_head.png",
+      "url": "",
+      "userId": "ctrvbqt3v89vkmbcabb0"
     }
   ]
 }
