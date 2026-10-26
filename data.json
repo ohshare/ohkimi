@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T02:51",
+  "updated_at": "2026-10-26T03:22",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "name": "Kimi",
-      "followers": 11108,
+      "followers": 11109,
       "following": 6,
       "likes": 3783,
       "bio": "",
@@ -104,7 +104,7 @@
     },
     {
       "name": "AppleOffice_𝓵𝓲𝓮",
-      "followers": 1193,
+      "followers": 1194,
       "following": 558,
       "likes": 11508,
       "bio": "本人三年级，今年八岁，叫苹果君（古希腊掌管苹果的神）",
@@ -166,7 +166,7 @@
       "name": "财神爷",
       "followers": 1017,
       "following": 750,
-      "likes": 21006,
+      "likes": 21007,
       "bio": "财神爷工作室最严肃的室长，师傅：夜行观星",
       "avatar": "https://avatar.moonshot.cn/avatar/d2ihd3gc86s8s00v1380/1787230197490273.jpg",
       "url": "",
@@ -446,7 +446,7 @@
       "name": "投资界",
       "followers": 613,
       "following": 0,
-      "likes": 2638,
+      "likes": 2639,
       "bio": "创业与投资资讯平台",
       "avatar": "https://avatar.moonshot.cn/avatar/cuu1gi737oq7oobmum90/1744625285141331.png",
       "url": "",
@@ -516,7 +516,7 @@
       "name": "极光工作室",
       "followers": 522,
       "following": 657,
-      "likes": 5357,
+      "likes": 5371,
       "bio": "五年级，师：恹，流筠，霜辞许秋，会长，徒：现3名",
       "avatar": "https://avatar.moonshot.cn/avatar/d9bmnuq4k4b1b4bnbvsg/1786938560174801.gif",
       "url": "",
@@ -696,7 +696,7 @@
       "name": "流筠工作室𝓛𝓲𝓾 𝓨𝓾𝓷 𝓢𝓽𝓾𝓭𝓲𝓸",
       "followers": 408,
       "following": 136,
-      "likes": 7805,
+      "likes": 7806,
       "bio": "流筠工作室主理人不求所来，但思将往……   Ⓥ 官方认证 流筠工作室委员会",
       "avatar": "https://avatar.moonshot.cn/avatar/d3ghff6s1rh2ida88m80/1791120980269959.jpg",
       "url": "",
@@ -1256,7 +1256,7 @@
       "name": "搞AI的西窗烛",
       "followers": 242,
       "following": 183,
-      "likes": 1299,
+      "likes": 1300,
       "bio": "我是小窗，我保证：质量不高永远不发！",
       "avatar": "https://avatar.moonshot.cn/avatar/d7nma45qip68iktqk7ng/1785311261408362.png",
       "url": "",
@@ -1386,7 +1386,7 @@
       "name": "甘露寺蜜璃",
       "followers": 227,
       "following": 165,
-      "likes": 2393,
+      "likes": 2395,
       "bio": "“伊黑先生...我们赢了吗？”",
       "avatar": "https://avatar.moonshot.cn/avatar/crat1o2j2gp6kbjtrq5g/1792958540528996.png",
       "url": "",
@@ -2096,7 +2096,7 @@
       "name": "轶事anecdote",
       "followers": 141,
       "following": 48,
-      "likes": 1611,
+      "likes": 1612,
       "bio": "蒸发态工作室室长｜向死而在  Being-towards-death",
       "avatar": "https://avatar.moonshot.cn/avatar/d9ilhabmrb73tdaqh13g/1792419293300817.png",
       "url": "",
@@ -2166,7 +2166,7 @@
       "name": "社交小太阳",
       "followers": 137,
       "following": 138,
-      "likes": 983,
+      "likes": 984,
       "bio": "以学会友，热情似光，高朋坐满，不亦乐乎！",
       "avatar": "https://avatar.moonshot.cn/avatar/cm71fiqlnl9906nmf7rg/1792591339542076.jpg",
       "url": "",
@@ -2771,6 +2771,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/d7qp5m136ak4r8923200/1777969443284920.jpg",
       "url": "",
       "userId": "d7qp5m136ak4r8923200"
+    },
+    {
+      "name": "卫道士",
+      "followers": 95,
+      "following": 14,
+      "likes": 433,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/d5bp6ds268gq6cl8vgo0/1769775863383378.png",
+      "url": "",
+      "userId": "d5bp6ds268gq6cl8vgo0"
     },
     {
       "name": "程序员Kim",
@@ -11251,6 +11261,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/meditate_head.png",
       "url": "",
       "userId": "craaouubi7sbge2m8rm0"
+    },
+    {
+      "name": "用户7624",
+      "followers": 0,
+      "following": 0,
+      "likes": 0,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/outdoor_head.png",
+      "url": "",
+      "userId": "csktrjfc1ecpqa3psf30"
     }
   ]
 }
