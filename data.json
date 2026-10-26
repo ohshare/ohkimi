@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T19:09",
+  "updated_at": "2026-10-26T19:46",
   "source": "Kimi 社区（发现）",
   "bloggers": [
     {
@@ -236,7 +236,7 @@
       "name": "银色子弹-Silver",
       "followers": 841,
       "following": 122,
-      "likes": 4186,
+      "likes": 4191,
       "bio": "B站账号同名同头像",
       "avatar": "https://avatar.moonshot.cn/avatar/cqgrjao04rj5plplu68g/1786593423727747.png",
       "url": "",
@@ -296,7 +296,7 @@
       "name": "熊猫烧香🐼",
       "followers": 733,
       "following": 554,
-      "likes": 15551,
+      "likes": 15552,
       "bio": "三年级初中生，必回关。八年老棋士",
       "avatar": "https://avatar.moonshot.cn/avatar/cvb974rua3d6oanqpr9g/1791087998825559.png",
       "url": "",
@@ -646,7 +646,7 @@
       "name": "𝓕𝓻𝓮𝔂𝓪",
       "followers": 433,
       "following": 50,
-      "likes": 4628,
+      "likes": 4629,
       "bio": "莲渡工作室室长 淡网",
       "avatar": "https://avatar.moonshot.cn/avatar/d3grou1toom0gl3ucsi0/1790940778623469.jpg",
       "url": "",
@@ -926,7 +926,7 @@
       "name": "夜行观星",
       "followers": 322,
       "following": 138,
-      "likes": 14751,
+      "likes": 14752,
       "bio": "退一步海阔天空，进一步我让你无地自容（Sterben will ich!）",
       "avatar": "https://avatar.moonshot.cn/avatar/csvdl76gi3ptm6s1p4lg/1792825902226070.png",
       "url": "",
@@ -1014,7 +1014,7 @@
     },
     {
       "name": "杰座-𝓳𝓳𝓩𝓩",
-      "followers": 295,
+      "followers": 296,
       "following": 375,
       "likes": 1567,
       "bio": "六年级，男",
@@ -1136,7 +1136,7 @@
       "name": "豆包万岁(K3)",
       "followers": 272,
       "following": 8,
-      "likes": 2225,
+      "likes": 2226,
       "bio": "我猜你在看他的介绍  徒:哈基盾  收徒中",
       "avatar": "https://avatar.moonshot.cn/avatar/ctqas2ol3dc7n791s800/1791000762389647.png",
       "url": "",
@@ -1446,7 +1446,7 @@
       "name": "HV/play _ music _ 31",
       "followers": 223,
       "following": 153,
-      "likes": 1967,
+      "likes": 1968,
       "bio": "What's thisMy name isI don't know",
       "avatar": "https://avatar.moonshot.cn/avatar/d8r40u8c86sdei1343p0/1792865651951501.png",
       "url": "",
@@ -1814,7 +1814,7 @@
     },
     {
       "name": "疏影",
-      "followers": 168,
+      "followers": 167,
       "following": 18,
       "likes": 2196,
       "bio": "惜占孤影者，生生世世             哥：哲 宇",
@@ -1866,7 +1866,7 @@
       "name": "Android Studio_17",
       "followers": 163,
       "following": 102,
-      "likes": 2019,
+      "likes": 2020,
       "bio": "mount -o rw,remount /system",
       "avatar": "https://avatar.moonshot.cn/avatar/ctebqr8nsmmslf7ejkdg/1791700242291742.png",
       "url": "",
@@ -2936,7 +2936,7 @@
       "name": "「墨」",
       "followers": 88,
       "following": 88,
-      "likes": 399,
+      "likes": 400,
       "bio": "杂圈 互关党 🚫单取",
       "avatar": "https://avatar.moonshot.cn/avatar/d8pta3trnuiphh8br7q0/1789201669787345.png",
       "url": "",
@@ -3341,6 +3341,16 @@
       "avatar": "https://avatar.moonshot.cn/avatar/d3p39khtoom0gl0cauqg/1790470892527171.png",
       "url": "",
       "userId": "d3p39khtoom0gl0cauqg"
+    },
+    {
+      "name": "A little mouse（王朝更替）",
+      "followers": 66,
+      "following": 13,
+      "likes": 294,
+      "bio": "王朝更替、黎明与曙光系列作者，一只手无缚鸡之力的小鼠",
+      "avatar": "https://avatar.moonshot.cn/avatar/cu6a9cl3v89hh8ej63hg/1772460132528709.jpg",
+      "url": "",
+      "userId": "cu6a9cl3v89hh8ej63hg"
     },
     {
       "name": "o巴级大狂风o",
@@ -11481,6 +11491,26 @@
       "avatar": "https://avatar.moonshot.cn/avatar/default/sociology_head.png",
       "url": "",
       "userId": "csg46q4rmee4qptfaa50"
+    },
+    {
+      "name": "宇",
+      "followers": 0,
+      "following": 0,
+      "likes": 14,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/cr95edpkqq4sl8fcenmg/1725060919.jpeg",
+      "url": "",
+      "userId": "cr95edpkqq4sl8fcenng"
+    },
+    {
+      "name": "用户3865",
+      "followers": 0,
+      "following": 0,
+      "likes": 6,
+      "bio": "",
+      "avatar": "https://avatar.moonshot.cn/avatar/default/music_head.png",
+      "url": "",
+      "userId": "ctejb4rf4kmlkaurpe7g"
     }
   ]
 }
