@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "community.json")
 
 AT = os.environ.get("KIMI_TOKEN", "").strip()
-RT = os.environ.get("KIMI_RT", "").strip()
+RT = os.environ.get("KIMI_RT", "").strip() or os.environ.get("KIMI_REFRESH_TOKEN", "").strip()
 
 HEAD = {
     "Content-Type": "application/json",
