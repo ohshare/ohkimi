@@ -1,28 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-一次性探测：能否用我们自己的 token 走通「发消息→CreateChatShare→GetChatShareCard」
-把每一步的完整响应写进 community.json 的 _probe 字段带回本地分析。
-跑完务必恢复 fetch_community.py 原版！
-"""
-import os, sys, json, time, re
+"""探测2：修正 Content-Type/body 格式，找出 Chat 接口正确请求形态。结果写 community.json._probe2"""
+import os, json, time, re
 import urllib.request, urllib.error
 
 BASE = "https://www.kimi.com/apiv2"
 AUTH = "https://auth.kimi.com/api/account.gateway.v1.AuthService/RefreshToken"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "community.json")
-
 RT = os.environ.get("KIMI_RT", "").strip() or os.environ.get("KIMI_REFRESH_TOKEN", "").strip()
-HEAD = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "x-msh-platform": "web",
-    "x-msh-version": "2.1.0",
-    "R-Timezone": "Asia/Shanghai",
-    "X-Language": "zh-CN",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
-}
+
+def H(ct="application/json"):
+    return {"Content-Type": ct, "Accept": "application/json",
+        "x-msh-platform": "web", "x-msh-version": "2.1.0",
+        "R-Timezone": "Asia/Shanghai", "X-Language": "zh-CN",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36"}
 
 def deep_find(o, names, d=0):
     if d > 8 or not o or not isinstance(o, (dict, list)): return None
@@ -38,27 +30,17 @@ def deep_find(o, names, d=0):
         if r: return r
     return None
 
-def deep_collect(o, key, out, d=0):
-    if d > 12 or not o or not isinstance(o, (dict, list)): return
-    if isinstance(o, list):
-        for x in o: deep_collect(x, key, out, d+1)
-        return
-    for k, v in o.items():
-        if k == key and isinstance(v, str): out.append(v)
-        deep_collect(v, key, out, d+1)
-
-def call(path, body, token, timeout=90):
+def call(path, body, token, ct="application/json", timeout=150):
     try:
-        req = urllib.request.Request(BASE + "/" + path,
-              data=json.dumps(body, ensure_ascii=False).encode(),
-              headers=dict(HEAD, Authorization="Bearer " + token), method="POST")
+        data = json.dumps(body, ensure_ascii=False).encode()
+        req = urllib.request.Request(BASE + "/" + path, data=data,
+              headers=dict(H(ct), Authorization="Bearer " + token), method="POST")
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            raw = r.read().decode("utf-8", "ignore")
-            return {"http": r.status, "raw": raw[:20000]}
+            return {"http": r.status, "ct_r": r.headers.get("Content-Type",""), "raw": r.read().decode("utf-8","ignore")[:8000]}
     except urllib.error.HTTPError as e:
-        return {"http": e.code, "raw": e.read().decode("utf-8", "ignore")[:20000]}
+        return {"http": e.code, "ct_r": e.headers.get("Content-Type",""), "raw": e.read().decode("utf-8","ignore")[:8000]}
     except Exception as e:
-        return {"http": -1, "raw": "EXC: " + str(e)}
+        return {"http": -1, "raw": "EXC: " + repr(e)}
 
 def renew():
     req = urllib.request.Request(AUTH, data=json.dumps({"refreshToken": RT}).encode(),
@@ -66,113 +48,43 @@ def renew():
     with urllib.request.urlopen(req, timeout=60) as r:
         d = json.loads(r.read().decode())
     a = deep_find(d, ["accessToken", "access_token"])
-    if not a: raise RuntimeError("renew failed: " + json.dumps(d, ensure_ascii=False)[:500])
+    if not a: raise RuntimeError("renew failed")
     return a
 
-def probe_chat(at):
-    """方案A: OKC 场景让 Kimi 生成 HTML；返回各种 id 与原始响应"""
-    out = {}
-    msg = {
-        "$typeName": "kimi.chat.v1.ChatMessage",
-        "refVotes": [], "id": "", "parentId": "", "childrenMessageIds": [],
-        "role": "ROLE_USER",
-        "blocks": [{
-            "$typeName": "kimi.chat.v1.Block", "id": "", "parentId": "", "messageId": "",
-            "content": {"case": "text", "value": {
-                "$typeName": "kimi.chat.v1.TextBlock",
-                "content": "帮我生成一个HTML网页，内容是一个大大的红色按钮，点击后显示 Hello World。直接给出完整 HTML 代码。"
-            }}
-        }],
-        "scenario": "OKC", "labels": [], "references": [], "isGoal": False
-    }
-    body = {
-        "$typeName": "kimi.gateway.chat.v1.ChatRequest",
-        "chatId": "", "kimiplusId": "", "scenario": "OKC", "projectId": "",
-        "tools": [], "message": msg,
-        "options": {"$typeName": "kimi.gateway.chat.v1.ChatRequestOptions", "thinking": False}
-    }
-    r = call("kimi.gateway.chat.v1.ChatService/Chat", body, at, timeout=150)
-    raw = r["raw"]
-    ids = {}
-    for key in ("chatId", "chat_id", "messageId", "message_id", "artifactId", "artifact_id"):
-        col = []
-        deep_collect(try_json(raw), key, col)
-        if not col:
-            col = re.findall(r'"%s"\s*:\s*"([^"]+)"' % key, raw)
-        ids[key] = list(dict.fromkeys(col))[:8]
-    out["OKC-chat"] = {"http": r["http"], "ids": ids, "raw_head": raw[:6000]}
-    return out
-
-def try_json(s):
-    try: return json.loads(s)
-    except Exception:
-        # SSE: 抽 data: 行里的 json
-        objs = []
-        for line in s.splitlines():
-            line = line.strip()
-            if line.startswith("data:"):
-                line = line[5:].strip()
-            if line.startswith("{"):
-                try: objs.append(json.loads(line))
-                except Exception: pass
-        return objs
-
-def probe_share(at, chat_id, msg_ids):
-    out = {}
-    for pname, path, body in [
-        ("CreateChatShare", "kimi.gateway.chat.v1.ChatService/CreateChatShare",
-         {"chatId": chat_id, "messageIds": msg_ids}),
-        ("ShareChatToCommunity", "kimi.gateway.chat.v1.ChatService/ShareChatToCommunity",
-         {"chatId": chat_id, "messageIds": msg_ids}),
-    ]:
-        r = call(path, body, at)
-        j = try_json(r["raw"])
-        ids = {}
-        for key in ("id", "shareId", "url", "chatShareId"):
-            col = []
-            deep_collect(j, key, col)
-            ids[key] = list(dict.fromkeys(col))[:5]
-        out[pname] = {"http": r["http"], "ids": ids, "raw": r["raw"][:4000]}
-    return out
-
-def probe_card(at, share_ids):
-    out = {}
-    for sid in share_ids[:5]:
-        r = call("moment.v1.MomentService/GetChatShareCard", {"chatShareId": sid}, at)
-        out[sid] = {"http": r["http"], "raw": r["raw"][:4000]}
-    return out
-
 def main():
-    result = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "steps": {}}
+    res = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "tries": {}}
     try:
         at = renew()
-        result["steps"]["renew"] = {"ok": True, "len": len(at)}
-        result["steps"]["chat"] = probe_chat(at)
-        # 从 chat 结果里提取 chatId/messageId 再试 share
-        chat = result["steps"]["chat"].get("OKC-chat", {})
-        ids = chat.get("ids", {})
-        chat_ids = ids.get("chatId", [])
-        msg_ids = ids.get("messageId", [])
-        if chat_ids and msg_ids:
-            result["steps"]["share"] = probe_share(at, chat_ids[0], msg_ids[:3])
-            share_ids = []
-            for v in result["steps"]["share"].values():
-                share_ids += v.get("ids", {}).get("id", [])
-                share_ids += v.get("ids", {}).get("shareId", [])
-            result["steps"]["card"] = probe_card(at, share_ids)
-        else:
-            result["steps"]["share"] = {"skipped": "no chatId/messageId", "chat_ids": chat_ids, "msg_ids": msg_ids}
+        res["at_len"] = len(at)
+        # 用已知能成功的接口验证 token 有效
+        ok = call("moment.v1.SearchService/SearchMoments", {"query":"HTML","sessionId":""}, at, timeout=60)
+        res["sanity"] = {"http": ok["http"], "raw": ok["raw"][:300]}
+        prompt = "写一个网页，一个大红按钮点了显示Hello World，只输出完整HTML代码"
+        # 纯 JSON body，无 $typeName；role 用数值；content.case 用 text
+        msg_base = {"id":"", "parentId":"", "role":1,
+            "blocks":[{"content":{"case":"text","value":{"content":prompt}}}],
+            "scenario":"OKC"}
+        bodies = {
+            "plain_enum": {"chatId":"", "scenario":"OKC", "tools":[], "message":msg_base,
+                           "options":{"thinking":False}},
+            "plain_role_num": {"chatId":"", "scenario":"OKC", "message":{**msg_base,"role":1}},
+            "no_scenario": {"chatId":"", "message":{"role":1,"blocks":[{"content":{"case":"text","value":{"content":prompt}}}]}},
+            "content_case_string": {"chatId":"", "scenario":"OKC", "message":{"role":1,
+                "blocks":[{"content":{"case":"text","value":{"content":prompt}}}]}, "options":{}},
+        }
+        for name, body in bodies.items():
+            r = call("kimi.gateway.chat.v1.ChatService/Chat", body, at, timeout=150)
+            res["tries"][name] = {"http": r["http"], "ct": r.get("ct_r",""), "raw": r["raw"][:2500]}
     except Exception as e:
-        result["error"] = repr(e)
-    # 写回 community.json（不破坏 works）
+        res["error"] = repr(e)
     try:
         d = json.load(open(OUT, encoding="utf-8"))
     except Exception:
         d = {"works": []}
-    d["_probe"] = result
+    d["_probe2"] = res
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(d, f, ensure_ascii=False)
-    print("probe done:", json.dumps(result, ensure_ascii=False)[:3000])
+    print("done", json.dumps(res, ensure_ascii=False)[:2000])
 
 if __name__ == "__main__":
     main()
