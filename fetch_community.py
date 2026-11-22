@@ -38,7 +38,9 @@ HEAD = {
 QUERIES = ["游戏", "HTML", "小游戏", "作品", "AI", "教程", "工具", "绘画", "网页", "创意", "互动", "代码"]
 PAGES = 2
 COMMENT_LIMIT = 8          # 每条动态最多抓几条评论
-MAX_MOMENTS = 120          # 最多收录多少条动态
+SEARCH_CAP = 400           # 本轮搜索去重上限（跑满所有关键词，尽量多发现新作品）
+COMMENT_CAP = 80           # 本轮抓评论的动态数
+HISTORY_LIMIT = 5000       # 累积总量上限，防止文件无限膨胀
 
 
 def deep_find(obj, names, depth=0):
@@ -238,10 +240,23 @@ def load_rank_map():
         return {}
 
 
+def load_history():
+    """读回上一轮的 community.json 作为历史库（GitHub Actions checkout 后即为云端最新数据）"""
+    if not os.path.exists(OUT):
+        return {}
+    try:
+        d = json.load(open(OUT, encoding="utf-8"))
+        return {w["id"]: w for w in d.get("works", []) if w.get("id")}
+    except Exception:
+        return {}
+
+
 def main():
+    global AT
     ensure_token()
     rank_map = load_rank_map()
-    print("▶ 抓取社区动态…（粉丝榜索引 %d 人）" % len(rank_map))
+    hist = load_history()
+    print("▶ 抓取社区动态…（粉丝榜索引 %d 人，历史收录 %d 条）" % (len(rank_map), len(hist)))
     seen = {}
     for q in QUERIES:
         tok = None
@@ -252,7 +267,6 @@ def main():
             st, d = call("moment.v1.SearchService/SearchMoments", payload)
             if st != 200 or not d:
                 if st == 401:
-                    global AT
                     AT = ""   # 强制下次续期
                 break
             ms = d.get("moments") or d.get("relatedMoments") or []
@@ -264,18 +278,17 @@ def main():
             if not tok or not ms:
                 break
             time.sleep(0.2)
-        print(f"  [{q}] 累计 {len(seen)}")
+        print(f"  [{q}] 本轮累计 {len(seen)}")
         time.sleep(0.2)
-        if len(seen) >= MAX_MOMENTS:
+        if len(seen) >= SEARCH_CAP:
             break
 
     rows = list(seen.values())
     # 优先有 HTML 作品的、评论多的
     rows.sort(key=lambda w: (bool(w["html_url"]), w["comment_num"], w["likes"]), reverse=True)
-    rows = rows[:MAX_MOMENTS]
 
-    print(f"▶ 抓取评论（{min(len(rows), 60)} 条动态）…")
-    for i, w in enumerate(rows[:60], 1):
+    print(f"▶ 抓取评论（本轮前 {min(len(rows), COMMENT_CAP)} 条）…")
+    for i, w in enumerate(rows[:COMMENT_CAP], 1):
         if w["comment_num"] > 0:
             w["comments"] = fetch_comments(w["id"], COMMENT_LIMIT)
             time.sleep(0.15)
@@ -292,15 +305,38 @@ def main():
     for w in rows:
         w["hot"] = w["likes"] + w["comment_num"] * 3
 
+    # ===== 累积合并：本轮数据覆盖历史，历史独有作品保留，总数只增不减 =====
+    merged = dict(hist)          # 先放历史全部
+    added = 0
+    for w in rows:
+        wid = w["id"]
+        old = hist.get(wid)
+        if old:
+            # 本轮没抓到/为空的字段用历史补齐，避免点赞/评论/封面等信息回退
+            for k in ("comments", "create_time", "cover", "html_url",
+                      "html_code", "text", "images", "prompt"):
+                if not w.get(k) and old.get(k):
+                    w[k] = old[k]
+        else:
+            added += 1
+        merged[wid] = w          # 本轮覆盖旧的（点赞/评论数是最新的）
+
+    allrows = list(merged.values())
+    for w in allrows:            # 全量重算热度，排行榜用最新快照
+        w["hot"] = (w.get("likes") or 0) + (w.get("comment_num") or 0) * 3
+    allrows.sort(key=lambda w: w.get("hot", 0), reverse=True)
+    if len(allrows) > HISTORY_LIMIT:
+        allrows = allrows[:HISTORY_LIMIT]
+
     out = {
         "updated_at": time.strftime("%Y-%m-%d %H:%M"),
-        "total": len(rows),
-        "html_count": sum(1 for w in rows if w["html_url"]),
-        "works": rows,
+        "total": len(allrows),
+        "html_count": sum(1 for w in allrows if w.get("html_url")),
+        "works": allrows,
     }
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
-    print(f"✅ 完成：{len(rows)} 条动态 / {out['html_count']} 个 HTML 作品 → {OUT}")
+    print(f"✅ 完成：本轮新增 {added} 条 / 累积 {len(allrows)} 条 / HTML {out['html_count']} 个 → {OUT}")
 
 
 if __name__ == "__main__":
