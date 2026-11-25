@@ -1,80 +1,343 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""诊断：SearchMoments 返回结构 + 前端同款调用能否拿到数据。只读，不改 community.json。
-结果 print 到 stdout，从 workflow 日志读取。"""
-import os, sys, json, time
+"""
+Kimi 社区数据流抓取：动态 + HTML 作品 + 评论 -> community.json
+
+已实测接口（2026-11-21）：
+  POST moment.v1.SearchService/SearchMoments      {query, sessionId}
+  POST moment.v1.CommentService/ListComments      {momentId, pageSize}
+  动态字段：content.title / chatShareCard.htmlFile.cdnUrl / coverImage / stat.commentNum / author
+  评论字段：comments[].content.text / author.name / createTime
+
+用法：
+  export KIMI_TOKEN="<access_token>"   # 或用 KIMI_RT 自动续期
+  python3 fetch_community.py
+"""
+import os, sys, json, time, re, html
 import urllib.request, urllib.error
 
 BASE = "https://www.kimi.com/apiv2"
 AUTH = "https://auth.kimi.com/api/account.gateway.v1.AuthService/RefreshToken"
-RT = os.environ.get("KIMI_REFRESH_TOKEN", "").strip()
-HEAD = {"Content-Type":"application/json","Accept":"application/json",
-        "x-msh-platform":"web","x-msh-version":"2.1.0",
-        "R-Timezone":"Asia/Shanghai","X-Language":"zh-CN"}
+HERE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(HERE, "community.json")
 
-def deep_find(o,names,d=0):
-    if d>8 or not o or not isinstance(o,(dict,list)): return None
-    if isinstance(o,list):
-        for x in o:
-            r=deep_find(x,names,d+1)
-            if r: return r
+AT = os.environ.get("KIMI_TOKEN", "").strip()
+RT = os.environ.get("KIMI_RT", "").strip() or os.environ.get("KIMI_REFRESH_TOKEN", "").strip()
+
+HEAD = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-msh-platform": "web",
+    "x-msh-version": "2.1.0",
+    "R-Timezone": "Asia/Shanghai",
+    "X-Language": "zh-CN",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36",
+}
+
+QUERIES = ["游戏", "HTML", "小游戏", "作品", "AI", "教程", "工具", "绘画", "网页", "创意", "互动", "代码"]
+PAGES = 2
+COMMENT_LIMIT = 8          # 每条动态最多抓几条评论
+SEARCH_CAP = 400           # 本轮搜索去重上限（跑满所有关键词，尽量多发现新作品）
+COMMENT_CAP = 80           # 本轮抓评论的动态数
+HISTORY_LIMIT = 5000       # 累积总量上限，防止文件无限膨胀
+
+
+def deep_find(obj, names, depth=0):
+    if depth > 6 or obj is None:
         return None
-    for k in names:
-        if k in o and isinstance(o[k],str) and o[k]: return o[k]
-    for v in o.values():
-        r=deep_find(v,names,d+1)
-        if r: return r
+    if isinstance(obj, dict):
+        for n in names:
+            if n in obj and isinstance(obj[n], str) and obj[n]:
+                return obj[n]
+        for v in obj.values():
+            r = deep_find(v, names, depth + 1)
+            if r:
+                return r
+    elif isinstance(obj, list):
+        for v in obj:
+            r = deep_find(v, names, depth + 1)
+            if r:
+                return r
     return None
 
-def renew():
-    req=urllib.request.Request(AUTH,data=json.dumps({"refreshToken":RT}).encode(),headers={"Content-Type":"application/json"},method="POST")
-    with urllib.request.urlopen(req,timeout=30) as r: d=json.loads(r.read())
-    return deep_find(d,["accessToken","access_token"])
 
-def call(at,path,payload):
-    h=dict(HEAD,Authorization="Bearer "+at)
-    req=urllib.request.Request(BASE+"/"+path,data=json.dumps(payload).encode(),headers=h,method="POST")
+def ensure_token():
+    global AT
+    if AT:
+        return AT
+    if not RT:
+        sys.exit("❌ 需要 KIMI_TOKEN 或 KIMI_RT")
+    body = json.dumps({"refreshToken": RT}).encode()
+    req = urllib.request.Request(AUTH, data=body, method="POST",
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        d = json.loads(r.read().decode())
+    at = deep_find(d, ["accessToken", "access_token"])
+    if not at:
+        sys.exit("❌ 续期失败")
+    AT = at
+    return AT
+
+
+def call(path, payload):
+    h = dict(HEAD, Authorization="Bearer " + ensure_token())
+    req = urllib.request.Request(BASE + "/" + path, method="POST", headers=h,
+                                 data=json.dumps(payload).encode())
     try:
-        with urllib.request.urlopen(req,timeout=30) as r: return r.status,json.loads(r.read())
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.status, json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        try: return e.code,json.loads(e.read())
-        except: return e.code,None
+        try:
+            return e.code, json.loads(e.read().decode())
+        except Exception:
+            return e.code, None
+
+
+def author_of(x):
+    a = x.get("author") or {}
+    ub = a.get("userBase") or a
+    av = ""
+    ai = ub.get("avatarImage") or {}
+    if isinstance(ai, dict):
+        av = ai.get("url") or ""
+    elif isinstance(ai, str):
+        av = ai
+    if not av and isinstance(ub.get("avatar"), str):
+        av = ub["avatar"]
+    return {
+        "id": ub.get("userId") or ub.get("id") or "",
+        "name": ub.get("name") or "匿名",
+        "avatar": av,
+        "bio": ub.get("bio") or "",
+    }
+
+
+def thumb(url):
+    """保留 x-tos-process 的 resize 参数（缩略图），避免加载原图几MB"""
+    if not url:
+        return ""
+    return url
+
+
+def images_of(content):
+    """提取 content.media.images（图文动态的配图），用缩略图"""
+    media = content.get("media") or {}
+    out = []
+    for im in (media.get("images") or [])[:9]:
+        u = im.get("thumbnailUrl") or im.get("originUrl") or ""
+        if u:
+            out.append(thumb(u))
+    return out
+
+
+def extract_html(segments):
+    """从聊天 segments 里提取 html 代码块（备用：cdnUrl 失效时可用）"""
+    for seg in segments or []:
+        txt = seg.get("text") or ""
+        m = re.search(r"```html\s*(.*?)```", txt, re.S | re.I)
+        if m and len(m.group(1)) > 200:
+            return m.group(1).strip()
+    return ""
+
+
+def norm_moment(x):
+    m = x.get("moment", x)
+    if not isinstance(m, dict):
+        return None
+    c = m.get("content") or {}
+    if isinstance(c, str):
+        c = {"title": c}
+
+    card = m.get("chatShareCard") or {}
+    hf = card.get("htmlFile") or {}
+    cover = hf.get("coverImage") or {}
+    cover_url = cover.get("originUrl") or cover.get("thumbnailUrl") or ""
+    # originUrl 带 x-tos-process 参数，取干净原图
+    if cover_url and "x-tos-process" in cover_url:
+        cover_url = cover_url.split("?")[0]
+
+    segs = (c.get("chatInfo") or {}).get("segments") or []
+    title = c.get("title") or ""
+    if not title:
+        for s in segs:
+            if s.get("role") == "CHAT_ROLE_USER" and s.get("text"):
+                title = s["text"][:80]
+                break
+
+    # 正文 text/excerpt + 配图 media.images + 缩略封面
+    body = (c.get("text") or c.get("excerpt") or "").strip()
+    imgs = images_of(c)
+    if cover_url and "x-tos-process" in cover_url and "resize" not in cover_url:
+        # 封面原图 -> 换成 480 缩略图
+        cover_url = re.sub(r"image%2Fauto-orient%2C1%2Fstrip",
+                           "image%2Fauto-orient%2C1%2Fstrip%2Fresize%2Cw_480%2Ch_480%2Cm_mfit", cover_url)
+
+    st = m.get("stat") or {}
+    mid = str(m.get("id") or "")
+    if not mid:
+        return None
+
+    return {
+        "id": mid,
+        "title": title,
+        "text": body[:600],
+        "images": imgs,
+        "author": author_of(m),
+        "create_time": m.get("createTime") or m.get("publishTime") or "",
+        "likes": int(st.get("likeNum") or 0),
+        "comment_num": int(st.get("commentNum") or 0),
+        "html_url": hf.get("cdnUrl") or "",
+        "html_code": extract_html(segs) if hf.get("cdnUrl") else "",
+        "cover": cover_url,
+        "prompt": hf.get("remixPrompt") or "",
+        "comments": [],
+    }
+
+
+def fetch_comments(mid, limit):
+    d = None
+    for attempt in range(3):
+        try:
+            st, d = call("moment.v1.CommentService/ListComments",
+                         {"momentId": mid, "pageSize": limit})
+            break
+        except Exception:
+            time.sleep(1 + attempt)
+    if not d:
+        return []
+    out = []
+    for c in (d.get("comments") or [])[:limit]:
+        txt = (c.get("content") or {}).get("text") or ""
+        if not txt:
+            continue
+        stt = c.get("stat") or {}
+        out.append({
+            "author": author_of(c),
+            "text": txt,
+            "time": c.get("createTime") or "",
+            "likes": int(stt.get("likeNum") or 0),
+        })
+    return out
+
+
+def load_rank_map():
+    """读粉丝榜 data.json，建立 userId -> 排名/粉丝数 映射"""
+    path = os.path.join(HERE, "data.json")
+    if not os.path.exists(path):
+        return {}
+    try:
+        d = json.load(open(path, encoding="utf-8"))
+        rows = d.get("bloggers", [])
+        rows = sorted(rows, key=lambda x: -(x.get("followers") or 0))
+        m = {}
+        for i, r in enumerate(rows, 1):
+            uid = r.get("userId") or ""
+            if uid:
+                m[uid] = {"rank": i, "followers": r.get("followers") or 0}
+        return m
+    except Exception:
+        return {}
+
+
+def load_history():
+    """读回上一轮的 community.json 作为历史库（GitHub Actions checkout 后即为云端最新数据）"""
+    if not os.path.exists(OUT):
+        return {}
+    try:
+        d = json.load(open(OUT, encoding="utf-8"))
+        return {w["id"]: w for w in d.get("works", []) if w.get("id")}
+    except Exception:
+        return {}
+
 
 def main():
-    at=renew()
-    print("AT_LEN",len(at))
-    # 1. 单次调用（抓取脚本同款）
-    st,d=call(at,"moment.v1.SearchService/SearchMoments",{"query":"游戏","sessionId":"diag-"+str(int(time.time()*1000))})
-    print("SINGLE_HTTP",st)
-    if d:
-        print("TOP_KEYS",list(d.keys())[:20])
-        ms=d.get("moments") or d.get("relatedMoments") or []
-        print("MOMENTS_LEN",len(ms) if isinstance(ms,list) else "not-list")
-        print("NEXT_TOKEN",d.get("_nextPageToken") or d.get("nextPageToken"))
-        if ms:
-            x=ms[0]
-            print("MOMENT0_KEYS",list(x.keys()) if isinstance(x,dict) else type(x))
-            m=x.get("moment",x)
-            if isinstance(m,dict):
-                print("M0_id",m.get("id"))
-                print("M0_content_keys",list((m.get("content") or {}).keys())[:15] if isinstance(m.get("content"),dict) else m.get("content"))
-                print("M0_stat",m.get("stat"))
-                print("M0_author",list((m.get("author") or {}).keys()))
-    # 2. 前端同款：同毫秒 sessionId 并发
-    sid="live-"+str(int(time.time()*1000))
-    results=[]
-    for q in ["游戏","HTML","作品"]:
-        st2,d2=call(at,"moment.v1.SearchService/SearchMoments",{"query":q,"sessionId":sid})
-        n=len((d2 or {}).get("moments") or []) if d2 else -1
-        results.append((q,st2,n))
-    print("SAME_SID_CONCURRENT",results)
-    # 3. 不同 sessionId 顺序
-    results2=[]
-    for q in ["游戏","HTML","作品"]:
-        st3,d3=call(at,"moment.v1.SearchService/SearchMoments",{"query":q,"sessionId":"sep-"+str(int(time.time()*1000))+q})
-        n=len((d3 or {}).get("moments") or []) if d3 else -1
-        results2.append((q,st3,n))
-    print("DIFF_SID",results2)
+    global AT
+    ensure_token()
+    rank_map = load_rank_map()
+    hist = load_history()
+    print("▶ 抓取社区动态…（粉丝榜索引 %d 人，历史收录 %d 条）" % (len(rank_map), len(hist)))
+    seen = {}
+    for q in QUERIES:
+        tok = None
+        for _ in range(PAGES):
+            payload = {"query": q, "sessionId": "community-" + str(int(time.time() * 1000))}
+            if tok:
+                payload["_nextPageToken"] = tok
+            st, d = call("moment.v1.SearchService/SearchMoments", payload)
+            if st != 200 or not d:
+                if st == 401:
+                    AT = ""   # 强制下次续期
+                break
+            ms = d.get("moments") or d.get("relatedMoments") or []
+            for x in ms:
+                w = norm_moment(x)
+                if w:
+                    seen[w["id"]] = w
+            tok = d.get("_nextPageToken") or d.get("nextPageToken")
+            if not tok or not ms:
+                break
+            time.sleep(0.2)
+        print(f"  [{q}] 本轮累计 {len(seen)}")
+        time.sleep(0.2)
+        if len(seen) >= SEARCH_CAP:
+            break
 
-if __name__=="__main__":
+    rows = list(seen.values())
+    # 优先有 HTML 作品的、评论多的
+    rows.sort(key=lambda w: (bool(w["html_url"]), w["comment_num"], w["likes"]), reverse=True)
+
+    print(f"▶ 抓取评论（本轮前 {min(len(rows), COMMENT_CAP)} 条）…")
+    for i, w in enumerate(rows[:COMMENT_CAP], 1):
+        if w["comment_num"] > 0:
+            w["comments"] = fetch_comments(w["id"], COMMENT_LIMIT)
+            time.sleep(0.15)
+        if i % 20 == 0:
+            print(f"  {i}/{len(rows)}")
+
+    # 给作者补充粉丝榜排名
+    for w in rows:
+        r = rank_map.get(w["author"]["id"])
+        w["author"]["rank"] = r["rank"] if r else 0
+        w["author"]["followers"] = r["followers"] if r else 0
+
+    # 热度分：点赞 + 评论*3，供排行榜用
+    for w in rows:
+        w["hot"] = w["likes"] + w["comment_num"] * 3
+
+    # ===== 累积合并：本轮数据覆盖历史，历史独有作品保留，总数只增不减 =====
+    merged = dict(hist)          # 先放历史全部
+    added = 0
+    for w in rows:
+        wid = w["id"]
+        old = hist.get(wid)
+        if old:
+            # 本轮没抓到/为空的字段用历史补齐，避免点赞/评论/封面等信息回退
+            for k in ("comments", "create_time", "cover", "html_url",
+                      "html_code", "text", "images", "prompt"):
+                if not w.get(k) and old.get(k):
+                    w[k] = old[k]
+        else:
+            added += 1
+        merged[wid] = w          # 本轮覆盖旧的（点赞/评论数是最新的）
+
+    allrows = list(merged.values())
+    for w in allrows:            # 全量重算热度，排行榜用最新快照
+        w["hot"] = (w.get("likes") or 0) + (w.get("comment_num") or 0) * 3
+    allrows.sort(key=lambda w: w.get("hot", 0), reverse=True)
+    if len(allrows) > HISTORY_LIMIT:
+        allrows = allrows[:HISTORY_LIMIT]
+
+    out = {
+        "updated_at": time.strftime("%Y-%m-%d %H:%M"),
+        "total": len(allrows),
+        "html_count": sum(1 for w in allrows if w.get("html_url")),
+        "works": allrows,
+    }
+    with open(OUT, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
+    print(f"✅ 完成：本轮新增 {added} 条 / 累积 {len(allrows)} 条 / HTML {out['html_count']} 个 → {OUT}")
+
+
+if __name__ == "__main__":
     main()
